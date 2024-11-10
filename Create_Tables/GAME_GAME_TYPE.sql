@@ -4,8 +4,8 @@
 
 CREATE TABLE IF NOT EXISTS public."GAME_GAME_TYPE"
 (
-    game_id character varying(10)[] COLLATE pg_catalog."default" NOT NULL,
-    game_type_id character varying(10)[] COLLATE pg_catalog."default" NOT NULL,
+    game_id character varying(10) COLLATE pg_catalog."default" NOT NULL,
+    game_type_id character varying(10) COLLATE pg_catalog."default" NOT NULL,
     CONSTRAINT "GAME_GAME_TYPE_pkey" PRIMARY KEY (game_id, game_type_id)
 )
 
