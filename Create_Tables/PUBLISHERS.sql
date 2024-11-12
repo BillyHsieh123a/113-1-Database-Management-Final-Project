@@ -1,8 +1,8 @@
--- Table: public.PUBLISHERS
+-- Table: public.publishers
 
--- DROP TABLE IF EXISTS public."PUBLISHERS";
+-- DROP TABLE IF EXISTS public.publishers;
 
-CREATE TABLE IF NOT EXISTS public."PUBLISHERS"
+CREATE TABLE IF NOT EXISTS public.publishers
 (
     publisher_id character varying(10) COLLATE pg_catalog."default" NOT NULL,
     publisher_name character varying(20) COLLATE pg_catalog."default",
@@ -12,5 +12,5 @@ CREATE TABLE IF NOT EXISTS public."PUBLISHERS"
 
 TABLESPACE pg_default;
 
-ALTER TABLE IF EXISTS public."PUBLISHERS"
+ALTER TABLE IF EXISTS public.publishers
     OWNER to postgres;

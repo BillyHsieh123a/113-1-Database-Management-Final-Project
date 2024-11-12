@@ -13,7 +13,6 @@ CREATE TABLE IF NOT EXISTS public.user_devices
         REFERENCES public."user" (user_id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
-        NOT VALID
 )
 
 TABLESPACE pg_default;

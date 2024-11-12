@@ -10,13 +10,11 @@ CREATE TABLE IF NOT EXISTS public.user_game_types
     CONSTRAINT user_game_types_game_type_id_fkey FOREIGN KEY (game_type_id)
         REFERENCES public.game_types (game_type_id) MATCH SIMPLE
         ON UPDATE NO ACTION
-        ON DELETE NO ACTION
-        NOT VALID,
+        ON DELETE NO ACTION,
     CONSTRAINT user_game_types_user_id_fkey FOREIGN KEY (user_id)
         REFERENCES public."user" (user_id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
-        NOT VALID
 )
 
 TABLESPACE pg_default;

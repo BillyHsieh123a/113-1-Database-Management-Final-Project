@@ -10,13 +10,11 @@ CREATE TABLE IF NOT EXISTS public.user_friends
     CONSTRAINT user_friends_friend_id_fkey FOREIGN KEY (friend_id)
         REFERENCES public."user" (user_id) MATCH SIMPLE
         ON UPDATE NO ACTION
-        ON DELETE NO ACTION
-        NOT VALID,
+        ON DELETE NO ACTION,
     CONSTRAINT user_friends_user_id_fkey FOREIGN KEY (user_id)
         REFERENCES public."user" (user_id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
-        NOT VALID
 )
 
 TABLESPACE pg_default;
