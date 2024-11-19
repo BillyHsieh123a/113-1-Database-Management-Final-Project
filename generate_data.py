@@ -1,230 +1,326 @@
+import psycopg2
+from faker import Faker
 import random
-import faker
-from datetime import datetime, timedelta
+import datetime
 
-# Setup Faker for generating mock data
-fake = faker.Faker()
+# Create a Faker instance
+fake = Faker()
 
-# Data stores for unique values
-users = {}
-games = {}
-game_types = {}
-game_items = {}
-game_developers = {}
-game_publishers = {}
-game_reviews = {}
-user_inventory = {}
-user_games = {}
-user_game_statistics = {}
-user_achievements = {}
-game_additions = {}
-user_notifications = {}
-user_carts = {}
-game_tags = {}
-user_ratings = {}
-game_dlc = {}
-user_payments = {}
-game_subscriptions = {}
-game_suggestions = {}
+# Connect to the PostgreSQL database
+conn = psycopg2.connect(
+    dbname="DB_Final_Project", 
+    user="postgres", 
+    password="bear123321a", 
+    host="localhost"
+)
+cur = conn.cursor()
 
-# Define a function to generate users
-def generate_users(num=10):
-    for _ in range(num):
-        user_id = fake.unique.random_number(digits=10)
-        users[user_id] = {
-            "user_id": user_id,
-            "user_name": fake.user_name(),
-            "email": fake.email(),
-            "birthday": fake.date_of_birth(minimum_age=18, maximum_age=80),
-            "country": fake.country(),
-            "language": fake.language_name(),
-            "fund": random.randint(100, 1000),
-            "notification": random.choice([True, False]),
-            "cookies": random.choice([True, False]),
-        }
-        print(f"INSERT INTO user (user_id, user_name, email, birthday, country, language, fund, notification, cookies) "
-              f"VALUES ('{user_id}', '{users[user_id]['user_name']}', '{users[user_id]['email']}', "
-              f"'{users[user_id]['birthday']}', '{users[user_id]['country']}', '{users[user_id]['language']}', "
-              f"{users[user_id]['fund']}, {users[user_id]['notification']}, {users[user_id]['cookies']});")
+# Generate random data for each table
 
-# Define a function to generate games
-def generate_games(num=10):
-    for _ in range(num):
-        game_id = fake.unique.random_number(digits=10)
-        games[game_id] = {
-            "game_id": game_id,
-            "game_name": fake.word(),
-            "game_description": fake.sentence(),
-            "system_requirements": fake.sentence(),
-        }
-        print(f"INSERT INTO game (game_id, game_name, game_description, system_requirements) "
-              f"VALUES ('{game_id}', '{games[game_id]['game_name']}', '{games[game_id]['game_description']}', "
-              f"'{games[game_id]['system_requirements']}');")
+# 1. Insert into "user" table
+def insert_user():
+    user_id = fake.unique.random_number(digits=10)
+    password_hashed = fake.password(length=20)
+    user_name = fake.user_name()
+    user_description = fake.text(max_nb_chars=300)
+    profile_pic = fake.image_url()
+    profile_background = fake.image_url()
+    birthday = fake.date_of_birth(minimum_age=18, maximum_age=60)
+    email = fake.email()
+    country = fake.country()
+    language = fake.language_name()
+    fund = random.randint(0, 10000)
+    filtering = random.choice([True, False])
+    notification = random.choice([True, False])
+    cookies = random.choice([True, False])
 
-# Define a function to generate game types
-def generate_game_types(num=5):
-    for _ in range(num):
-        game_type_id = fake.unique.random_number(digits=10)
-        game_types[game_type_id] = {
-            "game_type_id": game_type_id,
-            "game_type_name": fake.word(),
-        }
-        print(f"INSERT INTO game_types (game_type_id, game_type_name) "
-              f"VALUES ('{game_type_id}', '{game_types[game_type_id]['game_type_name']}');")
+    cur.execute(
+        "INSERT INTO public.\"user\" (user_id, password_hashed, user_name, user_description, profile_pic, profile_background, birthday, email, country, language, fund, filtering, notification, cookies) "
+        "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+        (user_id, password_hashed, user_name, user_description, profile_pic, profile_background, birthday, email, country, language, fund, filtering, notification, cookies)
+    )
 
-# Define a function to generate game items
-def generate_game_items(num=10):
-    for _ in range(num):
-        game_item = fake.unique.random_number(digits=10)
-        game_id = random.choice(list(games.keys()))
-        game_items[game_item] = {
-            "item_id": game_item,
-            "game_id": game_id,
-            "original_price": random.randint(10, 100),
-            "current_price": random.randint(10, 100),
-            "special_offer": random.uniform(0, 1),
-            "release_date": fake.date_this_decade(),
-        }
-        print(f"INSERT INTO game_items (item_id, game_id, original_price, current_price, special_offer, release_date) "
-              f"VALUES ('{game_item}', '{game_id}', {game_items[game_item]['original_price']}, "
-              f"{game_items[game_item]['current_price']}, {game_items[game_item]['special_offer']}, "
-              f"'{game_items[game_item]['release_date']}');")
+# 2. Insert into "ACHIEVEMENTS" table
+def insert_achievements():
+    game_id = fake.unique.random_number(digits=10)
+    achievement_id = fake.unique.random_number(digits=10)
+    achievement_name = fake.word()  # Generate a random achievement name
 
-# Define a function to generate game developers
-def generate_game_developers(num=10):
-    for _ in range(num):
-        developer_id = fake.unique.random_number(digits=10)
-        game_id = random.choice(list(games.keys()))
-        print(f"INSERT INTO game_developers (developer_id, game_id) VALUES ('{developer_id}', '{game_id}');")
+    cur.execute(
+        "INSERT INTO public.achievements (game_id, achievement_id, achievement_name) "
+        "VALUES (%s, %s, %s)",
+        (game_id, achievement_id, achievement_name)
+    )
 
-# Define a function to generate game publishers
-def generate_game_publishers(num=10):
-    for _ in range(num):
-        publisher_id = fake.unique.random_number(digits=10)
-        game_id = random.choice(list(games.keys()))
-        print(f"INSERT INTO game_publishers (publisher_id, game_id) VALUES ('{publisher_id}', '{game_id}');")
 
-# Define a function to generate user game statistics
-def generate_user_game_statistics(num=10):
-    for _ in range(num):
-        user_id = random.choice(list(users.keys()))
-        game_id = random.choice(list(games.keys()))
-        playtime = random.randint(1, 1000)
-        last_played = fake.date_this_year()
-        user_game_statistics_id = fake.unique.random_number(digits=10)
-        print(f"INSERT INTO user_game_statistics (user_game_statistics_id, user_id, game_id, playtime, last_played) "
-              f"VALUES ('{user_game_statistics_id}', '{user_id}', '{game_id}', {playtime}, '{last_played}');")
+# 3. Insert into "add_fund_record" table
+def insert_add_fund_record():
+    add_fund_record_id = fake.uuid4()
+    user_id = fake.random_number(digits=10)
+    fund_change = random.randint(0, 1000)
+    timestamp = fake.date_time_this_year()
 
-# Define a function to generate user achievements
-def generate_user_achievements(num=10):
-    for _ in range(num):
-        user_id = random.choice(list(users.keys()))
-        game_id = random.choice(list(games.keys()))
-        achievement_id = fake.unique.random_number(digits=10)
-        print(f"INSERT INTO user_achievements (user_id, game_id, achievement_id) "
-              f"VALUES ('{user_id}', '{game_id}', '{achievement_id}');")
+    cur.execute(
+        "INSERT INTO public.add_fund_record (add_fund_record_id, user_id, fund_change, timestamp) "
+        "VALUES (%s, %s, %s, %s)",
+        (add_fund_record_id, user_id, fund_change, timestamp)
+    )
 
-# Define a function to generate user inventories
-def generate_user_inventory(num=10):
-    for _ in range(num):
-        user_id = random.choice(list(users.keys()))
-        game_item = random.choice(list(game_items.keys()))
-        game_id = game_items[game_item]["game_id"]
-        acquired_date = fake.date_this_century()
-        not_owned_date = fake.date_this_century() if random.choice([True, False]) else None
-        print(f"INSERT INTO user_inventory (user_id, game_id, item_id, acquired_date, not_owned_date) "
-              f"VALUES ('{user_id}', '{game_id}', '{game_item}', '{acquired_date}', '{not_owned_date}');")
+# 4. Insert into "buy_item" table
+def insert_buy_item():
+    buy_item_id = fake.uuid4()
+    user_id = fake.random_number(digits=10)
+    game_id = fake.unique.random_number(digits=10)
+    item_id = fake.unique.random_number(digits=10)
+    price = random.randint(1, 100)
+    timestamp = fake.date_time_this_year()
+    is_cancelled = random.choice([True, False])
 
-# Define a function to generate user games
-def generate_user_games(num=10):
-    for _ in range(num):
-        user_id = random.choice(list(users.keys()))
-        game_id = random.choice(list(games.keys()))
-        installed_date = fake.date_this_decade()
-        uninstalled_date = fake.date_this_decade() if random.choice([True, False]) else None
-        print(f"INSERT INTO user_games (user_id, game_id, installed_date, uninstalled_date) "
-              f"VALUES ('{user_id}', '{game_id}', '{installed_date}', '{uninstalled_date}');")
+    cur.execute(
+        "INSERT INTO public.buy_item (buy_item_id, user_id, game_id, item_id, price, timestamp, isCancelled) "
+        "VALUES (%s, %s, %s, %s, %s, %s, %s)",
+        (buy_item_id, user_id, game_id, item_id, price, timestamp, is_cancelled)
+    )
 
-# Define a function to generate game reviews
-def generate_game_reviews(num=10):
-    for _ in range(num):
-        user_id = random.choice(list(users.keys()))
-        game_id = random.choice(list(games.keys()))
-        review_id = fake.unique.random_number(digits=10)
-        rating = random.randint(1, 5)
-        text = fake.sentence()
-        print(f"INSERT INTO game_reviews (review_id, game_id, user_id, rating, text) "
-              f"VALUES ('{review_id}', '{game_id}', '{user_id}', {rating}, '{text}');")
+# 5. Insert into "buy_item_cancel" table
+def insert_buy_item_cancel():
+    buy_item_id = fake.uuid4()
+    game_id = fake.unique.random_number(digits=10)
+    item_id = fake.unique.random_number(digits=10)
+    timestamp = fake.date_time_this_year()
 
-# Define a function to generate user payments
-def generate_user_payments(num=10):
-    for _ in range(num):
-        user_id = random.choice(list(users.keys()))
-        payment_id = fake.unique.random_number(digits=10)
-        amount = random.randint(10, 100)
-        payment_date = fake.date_this_year()
-        print(f"INSERT INTO user_payments (payment_id, user_id, amount, payment_date) "
-              f"VALUES ('{payment_id}', '{user_id}', {amount}, '{payment_date}');")
+    cur.execute(
+        "INSERT INTO public.buy_item_cancel (buy_item_id, game_id, item_id, timestamp) "
+        "VALUES (%s, %s, %s, %s)",
+        (buy_item_id, game_id, item_id, timestamp)
+    )
 
-# Define a function to generate user cart items
-def generate_user_carts(num=10):
-    for _ in range(num):
-        user_id = random.choice(list(users.keys()))
-        game_item = random.choice(list(game_items.keys()))
-        added_to_cart = fake.date_this_century()
-        print(f"INSERT INTO user_carts (user_id, item_id, added_to_cart) "
-              f"VALUES ('{user_id}', '{game_item}', '{added_to_cart}');")
+# 6. Insert into "CART" table
+def insert_cart():
+    user_id = fake.random_number(digits=10)
+    game_id = fake.unique.random_number(digits=10)
+    item_id = fake.unique.random_number(digits=10)
 
-# Define a function to generate game tags
-def generate_game_tags(num=10):
-    for _ in range(num):
-        game_id = random.choice(list(games.keys()))
-        tag = fake.word()
-        print(f"INSERT INTO game_tags (game_id, tag) "
-              f"VALUES ('{game_id}', '{tag}');")
+    cur.execute(
+        "INSERT INTO public.\"CART\" (user_id, game_id, item_id) "
+        "VALUES (%s, %s, %s)",
+        (user_id, game_id, item_id)
+    )
 
-# Define a function to generate game downloadable content (DLC)
-def generate_game_dlc(num=10):
-    for _ in range(num):
-        game_id = random.choice(list(games.keys()))
-        dlc_id = fake.unique.random_number(digits=10)
-        dlc_name = fake.word()
-        print(f"INSERT INTO game_dlc (game_id, dlc_id, dlc_name) "
-              f"VALUES ('{game_id}', '{dlc_id}', '{dlc_name}');")
+# 7. Insert into "DEVELOPERS" table
+def insert_developers():
+    developer_id = fake.unique.random_number(digits=10)
+    developer_name = fake.company()
+    description = fake.text(max_nb_chars=100)
 
-# Define a function to generate game subscriptions
-def generate_game_subscriptions(num=10):
-    for _ in range(num):
-        user_id = random.choice(list(users.keys()))
-        game_id = random.choice(list(games.keys()))
-        subscription_date = fake.date_this_year()
-        print(f"INSERT INTO game_subscriptions (user_id, game_id, subscription_date) "
-              f"VALUES ('{user_id}', '{game_id}', '{subscription_date}');")
+    cur.execute(
+        "INSERT INTO public.\"DEVELOPERS\" (developer_id, developer_name, description) "
+        "VALUES (%s, %s, %s)",
+        (developer_id, developer_name, description)
+    )
 
-# Define a function to generate game suggestions
-def generate_game_suggestions(num=10):
-    for _ in range(num):
-        user_id = random.choice(list(users.keys()))
-        game_id = random.choice(list(games.keys()))
-        suggestion_date = fake.date_this_year()
-        print(f"INSERT INTO game_suggestions (user_id, game_id, suggestion_date) "
-              f"VALUES ('{user_id}', '{game_id}', '{suggestion_date}');")
+# 8. Insert into "GAME" table
+def insert_game():
+    game_id = fake.unique.random_number(digits=10)
+    game_name = fake.word()
+    game_description = fake.text(max_nb_chars=100)
+    system_requirements = fake.text(max_nb_chars=100)
 
-# Generate the data for all tables
-generate_users(5)
-generate_games(3)
-generate_game_types(3)
-generate_game_items(5)
-generate_game_developers(5)
-generate_game_publishers(5)
-generate_user_game_statistics(5)
-generate_user_achievements(5)
-generate_user_inventory(5)
-generate_user_games(5)
-generate_game_reviews(5)
-generate_user_payments(5)
-generate_user_carts(5)
-generate_game_tags(5)
-generate_game_dlc(5)
-generate_game_subscriptions(5)
-generate_game_suggestions(5)
+    cur.execute(
+        "INSERT INTO public.\"GAME\" (game_id, game_name, game_description, system_reuirements) "
+        "VALUES (%s, %s, %s, %s)",
+        (game_id, game_name, game_description, system_requirements)
+    )
+
+# 9. Insert into "game_developers" table
+def insert_game_developers():
+    developer_id = fake.random_number(digits=10)
+    game_id = fake.random_number(digits=10)
+
+    cur.execute(
+        "INSERT INTO public.game_developers (developer_id, game_id) "
+        "VALUES (%s, %s)",
+        (developer_id, game_id)
+    )
+
+# 10. Insert into "game_game_type" table
+def insert_game_game_type():
+    game_id = fake.random_number(digits=10)
+    game_type_id = fake.random_number(digits=10)
+
+    cur.execute(
+        "INSERT INTO public.game_game_type (game_id, game_type_id) "
+        "VALUES (%s, %s)",
+        (game_id, game_type_id)
+    )
+
+# 11. Insert into "game_item" table
+def insert_game_item():
+    item_id = fake.unique.random_number(digits=10)
+    game_id = fake.random_number(digits=10)
+    original_price = random.randint(1, 100)
+    current_price = random.randint(1, 100)
+    special_offer = random.uniform(0, 1)
+    release_date = fake.date_this_year()
+
+    cur.execute(
+        "INSERT INTO public.game_item (item_id, game_id, original_price, current_price, special_offer, release_date) "
+        "VALUES (%s, %s, %s, %s, %s, %s)",
+        (item_id, game_id, original_price, current_price, special_offer, release_date)
+    )
+
+# 12. Insert into "game_publishers" table
+def insert_game_publishers():
+    publisher_id = fake.unique.random_number(digits=10)
+    game_id = fake.random_number(digits=10)
+
+    cur.execute(
+        "INSERT INTO public.\"GAME_PUBLISHERS\" (publisher_id, game_id) "
+        "VALUES (%s, %s)",
+        (publisher_id, game_id)
+    )
+
+# 13. Insert into "game_reviews" table
+def insert_game_reviews():
+    review_id = fake.uuid4()
+    game_id = fake.random_number(digits=10)
+    user_id = fake.random_number(digits=10)
+    rating = random.randint(1, 5)
+    text = fake.text(max_nb_chars=100)
+    review_timestamp = fake.date_time_this_year()
+
+    cur.execute(
+        "INSERT INTO public.game_reviews (review_id, game_id, user_id, rating, text, review_timestamp) "
+        "VALUES (%s, %s, %s, %s, %s, %s)",
+        (review_id, game_id, user_id, rating, text, review_timestamp)
+    )
+
+# 14. Insert into "game_types" table
+def insert_game_types():
+    game_type_id = fake.unique.random_number(digits=10)
+    game_type_name = fake.word()
+
+    cur.execute(
+        "INSERT INTO public.game_types (game_type_id, game_type_name) "
+        "VALUES (%s, %s)",
+        (game_type_id, game_type_name)
+    )
+
+# 15. Insert into "publishers" table
+def insert_publishers():
+    publisher_id = fake.unique.random_number(digits=10)
+    publisher_name = fake.company()
+    description = fake.text(max_nb_chars=100)
+
+    cur.execute(
+        "INSERT INTO public.publishers (publisher_id, publisher_name, description) "
+        "VALUES (%s, %s, %s)",
+        (publisher_id, publisher_name, description)
+    )
+
+# 16. Insert into "user_achievements" table
+def insert_user_achievements():
+    user_id = fake.random_number(digits=10)
+    achievement_id = fake.random_number(digits=10)
+
+    cur.execute(
+        "INSERT INTO public.user_achievements (user_id, achievement_id) "
+        "VALUES (%s, %s)",
+        (user_id, achievement_id)
+    )
+
+# 17. Insert into "user_games" table
+def insert_user_games():
+    user_id = fake.random_number(digits=10)
+    game_id = fake.random_number(digits=10)
+    installed_date = fake.date_this_decade()
+    uninstalled_date = fake.date_this_decade() if random.choice([True, False]) else None
+
+    cur.execute(
+        "INSERT INTO public.user_games (user_id, game_id, installed_date, uninstalled_date) "
+        "VALUES (%s, %s, %s, %s)",
+        (user_id, game_id, installed_date, uninstalled_date)
+    )
+
+# 18. Insert into "user_game_statistics" table
+def insert_user_game_statistics():
+    user_id = fake.random_number(digits=10)
+    game_id = fake.random_number(digits=10)
+    played_time = str(random.randint(1, 100)) + ' hours'  # Example format: 5 hours
+    achievement_num = random.randint(0, 100)
+
+    cur.execute(
+        "INSERT INTO public.user_game_statistics (user_id, game_id, played_time, achievement_num) "
+        "VALUES (%s, %s, %s, %s)",
+        (user_id, game_id, played_time, achievement_num)
+    )
+
+# 19. Insert into "user_game_types" table
+def insert_user_game_types():
+    user_id = fake.random_number(digits=10)
+    game_type_id = fake.random_number(digits=10)
+
+    cur.execute(
+        "INSERT INTO public.user_game_types (user_id, game_type_id) "
+        "VALUES (%s, %s)",
+        (user_id, game_type_id)
+    )
+
+# 20. Insert into "user_inventory" table
+def insert_user_inventory():
+    user_id = fake.random_number(digits=10)
+    game_id = fake.random_number(digits=10)
+    item_id = fake.random_number(digits=10)
+    acquired_date = fake.date_this_year()
+    not_owned_date = fake.date_this_year() if random.choice([True, False]) else None
+
+    cur.execute(
+        "INSERT INTO public.user_inventory (user_id, game_id, item_id, acquired_date, not_owned_date) "
+        "VALUES (%s, %s, %s, %s, %s)",
+        (user_id, game_id, item_id, acquired_date, not_owned_date)
+    )
+
+# 21. Insert into "user_friends" table
+def insert_user_friends():
+    user_id = fake.random_number(digits=10)
+    friend_id = fake.random_number(digits=10)
+
+    cur.execute(
+        "INSERT INTO public.user_friends (user_id, friend_id) "
+        "VALUES (%s, %s)",
+        (user_id, friend_id)
+    )
+
+# Number of records to insert
+num_records = 100
+
+# Insert data for all tables
+for _ in range(num_records):
+    insert_user()  # Insert into "user"
+    insert_achievements()  # Insert into "achievements"
+    insert_add_fund_record()  # Insert into "add_fund_record"
+    insert_buy_item()  # Insert into "buy_item"
+    insert_buy_item_cancel()  # Insert into "buy_item_cancel"
+    insert_cart()  # Insert into "cart"
+    insert_developers()  # Insert into "developers"
+    insert_game()  # Insert into "game"
+    insert_game_developers()  # Insert into "game_developers"
+    insert_game_game_type()  # Insert into "game_game_type"
+    insert_game_item()  # Insert into "game_item"
+    insert_game_publishers()  # Insert into "game_publishers"
+    insert_game_reviews()  # Insert into "game_reviews"
+    insert_game_types()  # Insert into "game_types"
+    insert_publishers()  # Insert into "publishers"
+    insert_user_achievements()  # Insert into "user_achievements"
+    insert_user_games()  # Insert into "user_games"
+    insert_user_game_statistics()  # Insert into "user_game_statistics"
+    insert_user_game_types()  # Insert into "user_game_types"
+    insert_user_inventory()  # Insert into "user_inventory"
+    insert_user_friends()  # Insert into "user_friends"
+
+# Commit all the inserts
+conn.commit()
+
+# Close the cursor and connection
+cur.close()
+conn.close()
