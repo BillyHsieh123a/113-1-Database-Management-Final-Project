@@ -1,8 +1,8 @@
--- Table: public.GAME
+-- Table: public.game
 
--- DROP TABLE IF EXISTS public."GAME";
+-- DROP TABLE IF EXISTS public.game;
 
-CREATE TABLE IF NOT EXISTS public."GAME"
+CREATE TABLE IF NOT EXISTS public.game
 (
     game_id character varying(10) COLLATE pg_catalog."default" NOT NULL,
     game_name character varying(20) COLLATE pg_catalog."default",
@@ -13,5 +13,5 @@ CREATE TABLE IF NOT EXISTS public."GAME"
 
 TABLESPACE pg_default;
 
-ALTER TABLE IF EXISTS public."GAME"
+ALTER TABLE IF EXISTS public.game
     OWNER to postgres;

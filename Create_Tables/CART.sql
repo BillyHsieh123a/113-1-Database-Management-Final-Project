@@ -1,15 +1,15 @@
--- Table: public.CART
+-- Table: public.cart
 
--- DROP TABLE IF EXISTS public."CART";
+-- DROP TABLE IF EXISTS public.cart;
 
-CREATE TABLE IF NOT EXISTS public."CART"
+CREATE TABLE IF NOT EXISTS public.cart
 (
     user_id character varying(10) COLLATE pg_catalog."default" NOT NULL,
     game_id character varying(10) COLLATE pg_catalog."default" NOT NULL,
     item_id character varying(10) COLLATE pg_catalog."default" NOT NULL,
     CONSTRAINT "CART_pkey" PRIMARY KEY (user_id, game_id, item_id),
     CONSTRAINT "CART_game_id_item_id_fkey" FOREIGN KEY (game_id, item_id)
-        REFERENCES public."GAME_ITEM" (game_id, item_id) MATCH SIMPLE
+        REFERENCES public.game_item (game_id, item_id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
         NOT VALID,
@@ -22,5 +22,5 @@ CREATE TABLE IF NOT EXISTS public."CART"
 
 TABLESPACE pg_default;
 
-ALTER TABLE IF EXISTS public."CART"
+ALTER TABLE IF EXISTS public.cart
     OWNER to postgres;

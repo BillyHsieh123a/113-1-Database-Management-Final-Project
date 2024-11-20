@@ -21,7 +21,7 @@ cur = conn.cursor()
 def insert_user():
     user_id = fake.unique.random_number(digits=10)
     password_hashed = fake.password(length=20)
-    user_name = fake.user_name()
+    user_name = fake.user_name()[:10]
     user_description = fake.text(max_nb_chars=300)
     profile_pic = fake.image_url()
     profile_background = fake.image_url()
