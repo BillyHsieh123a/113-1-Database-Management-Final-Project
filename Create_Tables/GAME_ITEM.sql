@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS public.game_item
     special_offer double precision,
     release_date date,
     item_id character varying(10) COLLATE pg_catalog."default" NOT NULL,
-    game_id character varying(10) COLLATE pg_catalog."default" NOT NULL,
+    game_id SERIAL NOT NULL,
     CONSTRAINT "GAME_ITEM_pkey" PRIMARY KEY (item_id, game_id),
     CONSTRAINT "GAME_ITEM_game_id_fkey" FOREIGN KEY (game_id)
         REFERENCES public.game (game_id) MATCH SIMPLE

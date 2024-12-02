@@ -4,24 +4,24 @@
 
 CREATE TABLE IF NOT EXISTS public."user"
 (
-    user_id character(10) COLLATE pg_catalog."default" NOT NULL,
-    password_hashed character varying(20) COLLATE pg_catalog."default" NOT NULL,
-    user_name character varying(10) COLLATE pg_catalog."default" NOT NULL,
-    user_description character varying(300) COLLATE pg_catalog."default",
-    profile_pic text COLLATE pg_catalog."default",
-    profile_background text COLLATE pg_catalog."default",
-    birthday date NOT NULL,
-    email text COLLATE pg_catalog."default" NOT NULL,
-    country character varying(20) COLLATE pg_catalog."default" NOT NULL,
-    language character varying(20) COLLATE pg_catalog."default" NOT NULL,
-    fund integer NOT NULL,
-    filtering boolean NOT NULL,
-    notification boolean NOT NULL,
-    cookies boolean NOT NULL,
+    user_id SERIAL NOT NULL, -- Changed to SERIAL for auto-increment
+    password_hashed CHARACTER VARYING(20) COLLATE pg_catalog."default" NOT NULL,
+    user_name CHARACTER VARYING(10) COLLATE pg_catalog."default" NOT NULL,
+    user_description CHARACTER VARYING(300) COLLATE pg_catalog."default",
+    profile_pic TEXT COLLATE pg_catalog."default",
+    profile_background TEXT COLLATE pg_catalog."default",
+    birthday DATE NOT NULL,
+    email TEXT COLLATE pg_catalog."default" NOT NULL,
+    country CHARACTER VARYING(20) COLLATE pg_catalog."default" NOT NULL,
+    language CHARACTER VARYING(20) COLLATE pg_catalog."default" NOT NULL,
+    fund INTEGER NOT NULL,
+    filtering BOOLEAN NOT NULL,
+    notification BOOLEAN NOT NULL,
+    cookies BOOLEAN NOT NULL,
     CONSTRAINT user_pkey PRIMARY KEY (user_id)
 )
 
 TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS public."user"
-    OWNER to postgres;
+    OWNER TO postgres;
