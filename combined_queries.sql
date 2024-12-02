@@ -3,17 +3,28 @@
 
 -- DROP TABLE IF EXISTS public."ACHIEVEMENTS";
 
-CREATE TABLE IF NOT EXISTS public."ACHIEVEMENTS"
-(
-    game_id character varying(10) COLLATE pg_catalog."default" NOT NULL,
-    achievement_id character varying(10) COLLATE pg_catalog."default" NOT NULL,
-    CONSTRAINT "ACHIEVEMENTS_pkey" PRIMARY KEY (game_id, achievement_id)
-)
+-- Table: public.achievements
 
+-- DROP TABLE IF EXISTS public.achievements;
+
+CREATE TABLE IF NOT EXISTS public.achievements
+(
+    game_id CHARACTER VARYING(10) COLLATE pg_catalog."default" NOT NULL,
+    achievement_id SERIAL NOT NULL, -- Changed to SERIAL for auto-increment
+    achievement_name CHARACTER VARYING(10) COLLATE pg_catalog."default" NOT NULL,
+    achievement_description CHARACTER VARYING(100) COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT "ACHIEVEMENTS_pkey" PRIMARY KEY (game_id, achievement_id),
+    CONSTRAINT "ACHIEVEMENTS_game_id_fkey" FOREIGN KEY (game_id)
+        REFERENCES public.game (game_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
+)
 TABLESPACE pg_default;
 
-ALTER TABLE IF EXISTS public."ACHIEVEMENTS"
+ALTER TABLE IF EXISTS public.achievements
     OWNER to postgres;
+
 -- End of ACHIEVEMENTS.sql
 
 -- Start of ADD_FUND_RECORD.sql
@@ -23,10 +34,10 @@ ALTER TABLE IF EXISTS public."ACHIEVEMENTS"
 
 CREATE TABLE IF NOT EXISTS public.add_fund_record
 (
-    add_fund_record_id character varying(100) COLLATE pg_catalog."default" NOT NULL,
-    user_id character varying(10) COLLATE pg_catalog."default" NOT NULL,
-    fund_change integer NOT NULL,
-    "timestamp" time with time zone NOT NULL,
+    add_fund_record_id SERIAL NOT NULL, -- Changed to SERIAL for auto-increment
+    user_id CHARACTER VARYING(10) COLLATE pg_catalog."default" NOT NULL,
+    fund_change INTEGER NOT NULL,
+    "timestamp" TIME WITH TIME ZONE NOT NULL,
     CONSTRAINT add_fund_record_pkey PRIMARY KEY (add_fund_record_id),
     CONSTRAINT add_fund_record_user_id_fkey FOREIGN KEY (user_id)
         REFERENCES public."user" (user_id) MATCH SIMPLE
@@ -37,7 +48,8 @@ CREATE TABLE IF NOT EXISTS public.add_fund_record
 TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS public.add_fund_record
-    OWNER to postgres;
+    OWNER TO postgres;
+
 -- End of ADD_FUND_RECORD.sql
 
 -- Start of BUY_ITEM.sql
@@ -47,13 +59,13 @@ ALTER TABLE IF EXISTS public.add_fund_record
 
 CREATE TABLE IF NOT EXISTS public.buy_item
 (
-    price integer,
-    "timestamp" timestamp with time zone,
-    "isCancelled" boolean,
-    buy_item_id character varying(100) COLLATE pg_catalog."default" NOT NULL,
-    user_id character varying(10) COLLATE pg_catalog."default",
-    game_id character varying(10) COLLATE pg_catalog."default" NOT NULL,
-    item_id character varying(10) COLLATE pg_catalog."default" NOT NULL,
+    price INTEGER,
+    "timestamp" TIMESTAMP WITH TIME ZONE,
+    "isCancelled" BOOLEAN,
+    buy_item_id SERIAL NOT NULL, -- Changed to SERIAL for auto-increment
+    user_id CHARACTER VARYING(10) COLLATE pg_catalog."default",
+    game_id CHARACTER VARYING(10) COLLATE pg_catalog."default" NOT NULL,
+    item_id CHARACTER VARYING(10) COLLATE pg_catalog."default" NOT NULL,
     CONSTRAINT "BUY_ITEM_pkey" PRIMARY KEY (buy_item_id, game_id, item_id),
     CONSTRAINT buy_item_game_id_item_id_fkey FOREIGN KEY (game_id, item_id)
         REFERENCES public.game_item (game_id, item_id) MATCH SIMPLE
@@ -70,7 +82,8 @@ CREATE TABLE IF NOT EXISTS public.buy_item
 TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS public.buy_item
-    OWNER to postgres;
+    OWNER TO postgres;
+
 -- End of BUY_ITEM.sql
 
 -- Start of BUY_ITEM_CANCELL.sql
@@ -132,18 +145,24 @@ ALTER TABLE IF EXISTS public."CART"
 
 -- DROP TABLE IF EXISTS public."DEVELOPERS";
 
-CREATE TABLE IF NOT EXISTS public."DEVELOPERS"
+CREATE TABLE IF NOT EXISTS public.developers
 (
-    developer_id character varying(10) COLLATE pg_catalog."default" NOT NULL,
-    developer_name character varying(20) COLLATE pg_catalog."default",
-    description character varying(100) COLLATE pg_catalog."default",
-    CONSTRAINT "DEVELOPERS_pkey" PRIMARY KEY (developer_id)
+    developer_id SERIAL NOT NULL, -- Changed to SERIAL for auto-increment
+    developer_name CHARACTER VARYING(20) COLLATE pg_catalog."default" NOT NULL,
+    description CHARACTER VARYING(100) COLLATE pg_catalog."default",
+    publisher_id CHARACTER VARYING(10) COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT "DEVELOPERS_pkey" PRIMARY KEY (developer_id),
+    CONSTRAINT "DEVELOPERS_publisher_id_fkey" FOREIGN KEY (publisher_id)
+        REFERENCES public.publishers (publisher_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
 )
 
 TABLESPACE pg_default;
 
-ALTER TABLE IF EXISTS public."DEVELOPERS"
-    OWNER to postgres;
+ALTER TABLE IF EXISTS public.developers
+    OWNER TO postgres;
 -- End of DEVELOPERS.sql
 
 -- Start of GAME.sql
@@ -151,19 +170,19 @@ ALTER TABLE IF EXISTS public."DEVELOPERS"
 
 -- DROP TABLE IF EXISTS public."GAME";
 
-CREATE TABLE IF NOT EXISTS public."GAME"
+CREATE TABLE IF NOT EXISTS public.game
 (
-    game_id character varying(10) COLLATE pg_catalog."default" NOT NULL,
-    game_name character varying(20) COLLATE pg_catalog."default",
-    game_description character varying(100) COLLATE pg_catalog."default",
-    system_reuirements character varying(100) COLLATE pg_catalog."default",
+    game_id SERIAL NOT NULL, -- Changed to SERIAL for auto-increment
+    game_name CHARACTER VARYING(20) COLLATE pg_catalog."default",
+    game_description CHARACTER VARYING(100) COLLATE pg_catalog."default",
+    system_requirements CHARACTER VARYING(100) COLLATE pg_catalog."default",
     CONSTRAINT "GAME_pkey" PRIMARY KEY (game_id)
 )
 
 TABLESPACE pg_default;
 
-ALTER TABLE IF EXISTS public."GAME"
-    OWNER to postgres;
+ALTER TABLE IF EXISTS public.game
+    OWNER TO postgres;
 -- End of GAME.sql
 
 -- Start of GAME_DEVELOPERS.sql
@@ -173,9 +192,10 @@ ALTER TABLE IF EXISTS public."GAME"
 
 CREATE TABLE IF NOT EXISTS public.game_developers
 (
-    developer_id character varying(10) COLLATE pg_catalog."default" NOT NULL,
-    game_id character varying(10) COLLATE pg_catalog."default" NOT NULL,
-    CONSTRAINT "GAME_DEVELOPERS_pkey" PRIMARY KEY (developer_id, game_id),
+    game_developer_id SERIAL NOT NULL, -- Added an auto-incrementing ID
+    developer_id CHARACTER VARYING(10) COLLATE pg_catalog."default" NOT NULL,
+    game_id CHARACTER VARYING(10) COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT "GAME_DEVELOPERS_pkey" PRIMARY KEY (game_developer_id), -- Primary key on the new auto-incrementing ID
     CONSTRAINT "GAME_DEVELOPERS_developer_id_fkey" FOREIGN KEY (developer_id)
         REFERENCES public.developers (developer_id) MATCH SIMPLE
         ON UPDATE NO ACTION
@@ -191,7 +211,8 @@ CREATE TABLE IF NOT EXISTS public.game_developers
 TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS public.game_developers
-    OWNER to postgres;
+    OWNER TO postgres;
+
 -- End of GAME_DEVELOPERS.sql
 
 -- Start of GAME_GAME_TYPE.sql
@@ -306,16 +327,16 @@ ALTER TABLE IF EXISTS public.game_types
 
 CREATE TABLE IF NOT EXISTS public.publishers
 (
-    publisher_id character varying(10) COLLATE pg_catalog."default" NOT NULL,
-    publisher_name character varying(20) COLLATE pg_catalog."default",
-    description character varying(100) COLLATE pg_catalog."default",
+    publisher_id SERIAL NOT NULL, -- Changed to SERIAL for auto-increment
+    publisher_name CHARACTER VARYING(20) COLLATE pg_catalog."default",
+    description CHARACTER VARYING(100) COLLATE pg_catalog."default",
     CONSTRAINT "PUBLISHERS_pkey" PRIMARY KEY (publisher_id)
 )
 
 TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS public.publishers
-    OWNER to postgres;
+    OWNER TO postgres;
 -- End of PUBLISHERS.sql
 
 -- Start of USER.sql
@@ -325,27 +346,27 @@ ALTER TABLE IF EXISTS public.publishers
 
 CREATE TABLE IF NOT EXISTS public."user"
 (
-    user_id character(10) COLLATE pg_catalog."default" NOT NULL,
-    password_hashed character varying(20) COLLATE pg_catalog."default" NOT NULL,
-    user_name character varying(10) COLLATE pg_catalog."default" NOT NULL,
-    user_description character varying(300) COLLATE pg_catalog."default",
-    profile_pic text COLLATE pg_catalog."default",
-    profile_background text COLLATE pg_catalog."default",
-    birthday date NOT NULL,
-    email text COLLATE pg_catalog."default" NOT NULL,
-    country character varying(20) COLLATE pg_catalog."default" NOT NULL,
-    language character varying(20) COLLATE pg_catalog."default" NOT NULL,
-    fund integer NOT NULL,
-    filtering boolean NOT NULL,
-    notification boolean NOT NULL,
-    cookies boolean NOT NULL,
+    user_id SERIAL NOT NULL, -- Changed to SERIAL for auto-increment
+    password_hashed CHARACTER VARYING(20) COLLATE pg_catalog."default" NOT NULL,
+    user_name CHARACTER VARYING(10) COLLATE pg_catalog."default" NOT NULL,
+    user_description CHARACTER VARYING(300) COLLATE pg_catalog."default",
+    profile_pic TEXT COLLATE pg_catalog."default",
+    profile_background TEXT COLLATE pg_catalog."default",
+    birthday DATE NOT NULL,
+    email TEXT COLLATE pg_catalog."default" NOT NULL,
+    country CHARACTER VARYING(20) COLLATE pg_catalog."default" NOT NULL,
+    language CHARACTER VARYING(20) COLLATE pg_catalog."default" NOT NULL,
+    fund INTEGER NOT NULL,
+    filtering BOOLEAN NOT NULL,
+    notification BOOLEAN NOT NULL,
+    cookies BOOLEAN NOT NULL,
     CONSTRAINT user_pkey PRIMARY KEY (user_id)
 )
 
 TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS public."user"
-    OWNER to postgres;
+    OWNER TO postgres;
 -- End of USER.sql
 
 -- Start of USER_ACHIEVEMENTS.sql

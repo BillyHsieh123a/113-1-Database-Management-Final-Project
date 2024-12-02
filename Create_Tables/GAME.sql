@@ -4,14 +4,14 @@
 
 CREATE TABLE IF NOT EXISTS public.game
 (
-    game_id character varying(10) COLLATE pg_catalog."default" NOT NULL,
-    game_name character varying(20) COLLATE pg_catalog."default",
-    game_description character varying(100) COLLATE pg_catalog."default",
-    system_reuirements character varying(100) COLLATE pg_catalog."default",
+    game_id SERIAL NOT NULL, -- Changed to SERIAL for auto-increment
+    game_name CHARACTER VARYING(20) COLLATE pg_catalog."default",
+    game_description CHARACTER VARYING(100) COLLATE pg_catalog."default",
+    system_requirements CHARACTER VARYING(100) COLLATE pg_catalog."default",
     CONSTRAINT "GAME_pkey" PRIMARY KEY (game_id)
 )
 
 TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS public.game
-    OWNER to postgres;
+    OWNER TO postgres;
