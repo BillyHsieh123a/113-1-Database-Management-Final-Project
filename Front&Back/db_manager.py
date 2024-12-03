@@ -1,20 +1,30 @@
 import psycopg2
 
-def connect_db():
+def get_connection():
+    """
+    Establish and return a database connection.
+    """
     return psycopg2.connect(
-        dbname="your_db",
-        user="your_user",
-        password="your_password",
+        dbname="DB_Final_Project",
+        user="postgres",
+        password="bear123321a",
         host="localhost",
-        port="5432"
     )
 
-def execute_query(conn, query, params=None):
-    with conn.cursor() as cur:
-        cur.execute(query, params)
+def execute_query(query, values=None):
+    """
+    Execute a query against the database.
+    """
+    conn = None
+    try:
+        conn = get_connection()
+        cursor = conn.cursor()
+        cursor.execute(query, values)
         if query.strip().upper().startswith("SELECT"):
-            return cur.fetchall()
+            return cursor.fetchall()
         conn.commit()
-
-def close_db(conn):
-    conn.close()
+    except Exception as e:
+        raise e
+    finally:
+        if conn:
+            conn.close()

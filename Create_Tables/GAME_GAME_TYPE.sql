@@ -4,8 +4,8 @@
 
 CREATE TABLE IF NOT EXISTS public.game_game_type
 (
-    game_id character varying(10) COLLATE pg_catalog."default" NOT NULL,
-    game_type_id character varying(10) COLLATE pg_catalog."default" NOT NULL,
+    game_id SERIAL NOT NULL,
+    game_type_id SERIAL NOT NULL,
     CONSTRAINT "GAME_GAME_TYPE_pkey" PRIMARY KEY (game_id, game_type_id),
     CONSTRAINT game_game_type_game_id_fkey FOREIGN KEY (game_id)
         REFERENCES public.game (game_id) MATCH SIMPLE

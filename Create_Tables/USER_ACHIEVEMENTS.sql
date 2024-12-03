@@ -4,9 +4,9 @@
 
 CREATE TABLE IF NOT EXISTS public.user_achievements
 (
-    user_id character varying(10) COLLATE pg_catalog."default" NOT NULL,
-    game_id character varying(10) COLLATE pg_catalog."default" NOT NULL,
-    achievement_id character varying(10) COLLATE pg_catalog."default" NOT NULL,
+    user_id SERIAL NOT NULL,
+    game_id SERIAL NOT NULL,
+    achievement_id SERIAL NOT NULL,
     achieved_date timestamp with time zone,
     CONSTRAINT "USER_ACHIEVEMENTS_pkey" PRIMARY KEY (user_id, achievement_id),
     CONSTRAINT "USER_ACHIEVEMENTS_achievement_id_game_id_fkey" FOREIGN KEY (achievement_id, game_id)

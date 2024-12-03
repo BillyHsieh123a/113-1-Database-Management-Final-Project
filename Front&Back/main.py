@@ -1,5 +1,16 @@
 from auth import signup, login
-from menu import main_menu
+
+def main_menu():
+    """
+    Display the main menu options for the user.
+    """
+    print("\nMain Menu:")
+    print("1. Browse Games")
+    print("2. View Library")
+    print("3. Purchase Game")
+    print("4. Logout")
+    choice = input("Select an option: ")
+    return choice
 
 def main():
     while True:
@@ -10,34 +21,24 @@ def main():
         choice = input("Select an option: ")
 
         if choice == "1":
-            username = input("Username: ")
-            password = input("Password: ")
-            if login(username, password):
-                print("Login successful!")
-                user_dashboard()
-            else:
-                print("Invalid credentials.")
+            if login():
+                while True:
+                    choice = main_menu()
+                    if choice == "1":
+                        print("Browsing games...")
+                    elif choice == "2":
+                        print("Viewing library...")
+                    elif choice == "3":
+                        print("Purchasing a game...")
+                    elif choice == "4":
+                        print("Logging out...")
+                        break
+                    else:
+                        print("Invalid option. Try again.")
         elif choice == "2":
-            username = input("Choose a username: ")
-            password = input("Choose a password: ")
-            signup(username, password)
+            signup()
         elif choice == "3":
             print("Goodbye!")
-            break
-        else:
-            print("Invalid option. Try again.")
-
-def user_dashboard():
-    while True:
-        choice = main_menu()
-        if choice == 1:
-            print("Browsing games...")
-        elif choice == 2:
-            print("Viewing library...")
-        elif choice == 3:
-            print("Purchasing a game...")
-        elif choice == 4:
-            print("Logging out...")
             break
         else:
             print("Invalid option. Try again.")

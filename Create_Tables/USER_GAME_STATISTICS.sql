@@ -4,8 +4,8 @@
 
 CREATE TABLE IF NOT EXISTS public.user_game_statistics
 (
-    user_id character varying(10) COLLATE pg_catalog."default" NOT NULL,
-    game_id character varying(10) COLLATE pg_catalog."default" NOT NULL,
+    user_id SERIAL NOT NULL,
+    game_id SERIAL NOT NULL,
     played_time interval,
     achievement_num integer,
     CONSTRAINT "USER_GAME_STATISTICS_pkey" PRIMARY KEY (user_id, game_id),

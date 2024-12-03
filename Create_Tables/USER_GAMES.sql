@@ -4,8 +4,8 @@
 
 CREATE TABLE IF NOT EXISTS public.user_games
 (
-    user_id character varying(10) COLLATE pg_catalog."default" NOT NULL,
-    game_id character varying(10) COLLATE pg_catalog."default" NOT NULL,
+    user_id SERIAL NOT NULL,
+    game_id SERIAL NOT NULL,
     installed_date timestamp with time zone NOT NULL,
     uninstalled_date timestamp with time zone,
     CONSTRAINT "USER_GAMES_pkey" PRIMARY KEY (user_id, game_id, installed_date),

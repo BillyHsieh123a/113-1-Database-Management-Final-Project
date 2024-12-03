@@ -4,8 +4,8 @@
 
 CREATE TABLE IF NOT EXISTS public.cart
 (
-    user_id character varying(10) COLLATE pg_catalog."default" NOT NULL,
-    game_id character varying(10) COLLATE pg_catalog."default" NOT NULL,
+    user_id SERIAL NOT NULL,
+    game_id SERIAL NOT NULL,
     item_id character varying(10) COLLATE pg_catalog."default" NOT NULL,
     CONSTRAINT "CART_pkey" PRIMARY KEY (user_id, game_id, item_id),
     CONSTRAINT "CART_game_id_item_id_fkey" FOREIGN KEY (game_id, item_id)

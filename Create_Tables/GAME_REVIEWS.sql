@@ -6,9 +6,9 @@ CREATE TABLE IF NOT EXISTS public.game_reviews
 (
     review_timestamp timestamp with time zone,
     rating integer,
-    review_id character varying(100) COLLATE pg_catalog."default" NOT NULL,
-    game_id character varying(10) COLLATE pg_catalog."default",
-    user_id character varying(10) COLLATE pg_catalog."default",
+    review_id SERIAL NOT NULL,
+    game_id SERIAL NOT NULL,
+    user_id SERIAL NOT NULL,
     text character varying(100) COLLATE pg_catalog."default",
     CONSTRAINT "GAME_REVIEWS_pkey" PRIMARY KEY (review_id),
     CONSTRAINT "GAME_REVIEWS_game_id_fkey" FOREIGN KEY (game_id)

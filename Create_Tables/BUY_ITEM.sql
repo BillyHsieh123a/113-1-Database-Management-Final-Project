@@ -8,8 +8,8 @@ CREATE TABLE IF NOT EXISTS public.buy_item
     "timestamp" TIMESTAMP WITH TIME ZONE,
     "isCancelled" BOOLEAN,
     buy_item_id SERIAL NOT NULL, -- Changed to SERIAL for auto-increment
-    user_id CHARACTER VARYING(10) COLLATE pg_catalog."default",
-    game_id CHARACTER VARYING(10) COLLATE pg_catalog."default" NOT NULL,
+    user_id SERIAL NOT NULL,
+    game_id SERIAL NOT NULL,
     item_id CHARACTER VARYING(10) COLLATE pg_catalog."default" NOT NULL,
     CONSTRAINT "BUY_ITEM_pkey" PRIMARY KEY (buy_item_id, game_id, item_id),
     CONSTRAINT buy_item_game_id_item_id_fkey FOREIGN KEY (game_id, item_id)

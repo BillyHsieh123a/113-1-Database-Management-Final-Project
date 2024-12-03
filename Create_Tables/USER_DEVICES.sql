@@ -4,7 +4,7 @@
 
 CREATE TABLE IF NOT EXISTS public.user_devices
 (
-    user_id character varying(10) COLLATE pg_catalog."default" NOT NULL,
+    user_id SERIAL NOT NULL,
     device_id integer NOT NULL,
     device_name character varying(20) COLLATE pg_catalog."default" NOT NULL,
     type character varying(10) COLLATE pg_catalog."default" NOT NULL,

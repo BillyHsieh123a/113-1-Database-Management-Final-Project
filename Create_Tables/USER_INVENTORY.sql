@@ -4,8 +4,8 @@
 
 CREATE TABLE IF NOT EXISTS public.user_inventory
 (
-    user_id character varying(10) COLLATE pg_catalog."default" NOT NULL,
-    game_id character varying(10) COLLATE pg_catalog."default" NOT NULL,
+    user_id SERIAL NOT NULL,
+    game_id SERIAL NOT NULL,
     item_id character varying(10) COLLATE pg_catalog."default" NOT NULL,
     acquired_date timestamp with time zone NOT NULL,
     not_owned_date timestamp with time zone,
