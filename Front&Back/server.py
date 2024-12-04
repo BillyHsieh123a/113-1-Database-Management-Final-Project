@@ -25,6 +25,8 @@ def execute_query(query, values=None):
             return cursor.fetchall()
         conn.commit()
     except Exception as e:
+        if conn:
+            conn.rollback() 
         raise e
     finally:
         if conn:
@@ -58,6 +60,7 @@ def signup():
         execute_query(query, values)
         return jsonify({"message": "User successfully registered!"}), 201
     except Exception as e:
+
         return jsonify({"error": str(e)}), 400
 
 @app.route('/login', methods=['POST'])
@@ -105,15 +108,23 @@ def show_user_profile(user_name):
         return user_data[0]  # Assuming user_name is unique
 
     except OperationalError as e:
+        if conn:
+            conn.rollback() 
         print(f"Database connection error: {e}")
         return None
     except IntegrityError as e:
+        if conn:
+            conn.rollback() 
         print(f"Integrity error: {e}")
         return None
     except DataError as e:
+        if conn:
+            conn.rollback() 
         print(f"Invalid input data: {e}")
         return None
     except Exception as e:
+        if conn:
+            conn.rollback() 
         print(f"An unexpected error occurred: {e}")
         return None
     finally:
@@ -174,10 +185,16 @@ def search_games(keywords):
         return related_games
 
     except OperationalError as e:
+        if conn:
+            conn.rollback() 
         return {"error": f"Database connection error: {e}"}
     except DataError as e:
+        if conn:
+            conn.rollback() 
         return {"error": f"Invalid input data: {e}"}
     except Exception as e:
+        if conn:
+            conn.rollback() 
         return {"error": f"An unexpected error occurred: {e}"}
     finally:
         if cur:
@@ -261,14 +278,24 @@ def add_friend(user_name, friend_name):
         return {"message": f"Friendship added successfully between user_name: {user_name} and friend_name: {friend_name}."}
 
     except ValueError as e:
+        if conn:
+            conn.rollback() 
         return {"error": f"Validation error: {e}"}
     except OperationalError as e:
+        if conn:
+            conn.rollback() 
         return {"error": f"Database connection error: {e}"}
     except IntegrityError as e:
+        if conn:
+            conn.rollback() 
         return {"error": f"Integrity error: {e}"}
     except DataError as e:
+        if conn:
+            conn.rollback() 
         return {"error": f"Invalid input data: {e}"}
     except Exception as e:
+        if conn:
+            conn.rollback() 
         return {"error": f"An unexpected error occurred: {e}"}
     finally:
         if cur:
@@ -356,18 +383,38 @@ def user_buy_items(user_id, game_id, item_id):
             (user_id, game_id, item_id, current_price, False)
         )
 
+        # Add record to user_games
+        cur.execute(
+            """
+            INSERT INTO public."user_games" 
+            (user_id, game_id, installed_date) 
+            VALUES (%s, %s, NOW())
+            """,
+            (user_id, game_id)
+        )
+
         conn.commit()
         return True
 
     except ValueError as e:
+        if conn:
+            conn.rollback() 
         return {"error": f"Validation error: {e}"}
     except OperationalError as e:
+        if conn:
+            conn.rollback() 
         return {"error": f"Database connection error: {e}"}
     except IntegrityError as e:
+        if conn:
+            conn.rollback() 
         return {"error": f"Integrity error: {e}"}
     except DataError as e:
+        if conn:
+            conn.rollback() 
         return {"error": f"Invalid input data: {e}"}
     except Exception as e:
+        if conn:
+            conn.rollback() 
         return {"error": f"An unexpected error occurred: {e}"}
     finally:
         if cur:
@@ -432,17 +479,34 @@ def user_add_fund(user_id, amount):
         if updated_row is None:
             return {"error": "User ID not found."}
 
+        cur.execute(
+            """
+            INSERT INTO public."add_fund_record"
+            (user_id, fund_change, timestamp)
+            VALUES (%s, %s, NOW())
+            """, 
+            (user_id, amount)
+        )
+
         # Commit the transaction
         conn.commit()
         return {"message": f"Fund updated successfully. New fund balance: {updated_row[0]}"}
 
     except OperationalError as e:
+        if conn:
+            conn.rollback() 
         return {"error": f"Database connection error: {e}"}
     except IntegrityError as e:
+        if conn:
+            conn.rollback() 
         return {"error": f"Integrity error (e.g., constraint violation): {e}"}
     except DataError as e:
+        if conn:
+            conn.rollback() 
         return {"error": f"Invalid input data: {e}"}
     except Exception as e:
+        if conn:
+            conn.rollback() 
         return {"error": f"An unexpected error occurred: {e}"}
     finally:
         # Cleanup resources
