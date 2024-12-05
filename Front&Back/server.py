@@ -537,6 +537,163 @@ def add_fund():
         return jsonify(result), 400
     return jsonify(result), 200
 
+def publisher_adding_games(publisher_id, game_name, game_description, system_requirements, original_price, special_offer):
+    ## special_offer = 0.7, 0.8 這種的
+    conn = None
+    cur = None
+
+    try:
+        if not all([publisher_id, game_name, game_description, system_requirements, original_price, special_offer]):
+            raise ValueError("Invalid input. Please ensure all inputs are valid.")
+
+        # Connect to the PostgreSQL database
+        conn = get_connection()
+        cur = conn.cursor()
+
+        # 將遊戲資訊插入資料庫並取得game_id
+        cur.execute(
+            """
+            INSERT INTO public."game" (game_name, game_description, system_requirements)
+            VALUES (%s, %s, %s) RETURNING game_id
+            """,
+            (game_name, game_description, system_requirements)
+        )
+        
+        # Get the generated game_id for the new entry
+        game_id = cur.fetchone()[0]
+
+        current_price = int(original_price * special_offer)
+        
+        # Insert into game_item with game_id and item_id set to 1
+        cur.execute(
+            """
+            INSERT INTO public."game_item" (game_id, item_id, original_price, current_price, special_offer, release_date)
+            VALUES (%s, 1, %s, %s, %s, %s, NOW())
+            """,
+            (game_id, original_price, current_price, special_offer)
+        )
+
+         # Insert into game_publisher with game_id and publisher_id
+        cur.execute(
+            """
+            INSERT INTO public."game_publisher" (game_id, publisher_id)
+            VALUES (%s, %s)
+            """,
+            (game_id, publisher_id)
+        )
+
+        # 提交變更
+        conn.commit()
+        return {"message": f"successfully adding game: {game_id}, {game_name}"}
+    
+    except Exception as e:
+        if conn:
+            conn.rollback()
+        return {"error": f"An error occurred: {e}"}
+    finally:
+        # 關閉游標與連接
+        if cur:
+            cur.close()
+        if conn:
+            conn.close()
+
+# API route to add funds
+@app.route('/adding_games', methods=['POST'])
+def adding_games():
+    data = request.get_json()
+    publisher_id = data.get('publisher_id')
+    game_name = data.get('game_name')
+    game_description = data.get('game_description')
+    system_requirements = data.get('system_requirements')
+    original_price = data.get('original_price')
+    special_offer = data.get('special_offer')
+
+    if not all([publisher_id, game_name, game_description, system_requirements, original_price, special_offer]):
+        return jsonify({"error": "Missing required fields."}), 400
+
+
+    result = publisher_adding_games(publisher_id, game_name, game_description, system_requirements, original_price, special_offer)
+
+    if "error" in result:
+        return jsonify(result), 400
+    return jsonify(result), 200
+
+def publisher_changing_price(publisher_id, game_id, item_id, special_offer):
+    conn = None
+    cur = None
+
+    try:
+        if not all([publisher_id, game_id, item_id, special_offer]):
+            raise ValueError("Invalid input. Please ensure all inputs are valid.")
+
+        # Connect to the PostgreSQL database
+        conn = get_connection()
+        cur = conn.cursor()
+
+        cur.execute(
+            """
+            SELECT * 
+            FROM public."game_publisher"
+            WHERE publisher_id = %s AND game_id = %s
+            """,
+            (publisher_id, game_id)
+        )
+        game_publisher_result = cur.fetchone()
+        if game_publisher_result is None:
+            return {"error": "You don't own the game!!!"}
+
+        # Calculate the new current price based on the special offer
+        cur.execute(
+            """
+            SELECT original_price FROM public."game_item"
+            WHERE game_id = %s AND item_id = %s
+            """,
+            (game_id, item_id)
+        )
+        original_price = cur.fetchone()[0]
+        current_price = int(original_price * special_offer)
+
+        # Update the special_offer and current_price in the game_item table
+        cur.execute(
+            """
+            UPDATE public."game_item"
+            SET special_offer = %s, current_price = %s
+            WHERE game_id = %s AND item_id = %s
+            """,
+            (special_offer, current_price, game_id, item_id)
+        )
+
+        # 提交變更
+        conn.commit()
+        return {"message": f"Chagned the price of game {game_id}, item {item_id} to {current_price}."}
+    except Exception as e:
+        if conn:
+            conn.rollback()
+        return {"error": f"An error occurred: {e}"}
+    finally:
+        # 關閉游標與連接
+        if cur:
+            cur.close()
+        if conn:
+            conn.close()
+
+@app.route('/changing_price', methods=['POST'])
+def changing_price():
+    data = request.get_json()
+    publisher_id = data.get('publisher_id')
+    game_id = data.get('game_id')
+    item_id = data.get('item_id')
+    special_offer = data.get('special_offer')
+
+    if not all([publisher_id, game_id, item_id, special_offer]):
+        return jsonify({"error": "Missing required fields."}), 400
+
+
+    result = publisher_changing_price(publisher_id, game_id, item_id, special_offer)
+
+    if "error" in result:
+        return jsonify(result), 400
+    return jsonify(result), 200
 
 if __name__ == "__main__":
     app.run(debug=True)
