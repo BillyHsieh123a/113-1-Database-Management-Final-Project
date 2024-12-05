@@ -258,64 +258,138 @@ def main():
     user_name = ""
     user_id = 0
 
-    while True:
-        print("\nWelcome to GameHub!")
-        if not is_logged_in:
-            print("1. Login")
-            print("2. Signup")
-            print("3. Exit")
-            choice = input("Select an option: ")
+    print("\nWelcome to GameHub!")
 
-            if choice == "1":
-                user_name, user_id = login()
-                if user_name != "":
-                    is_logged_in = True
-                    print("Login successful!")
+    print("What is your role?")
+    print("1. User")
+    print("2. Publisher")
+    choice = input("Select an option: ")
+    
+    if choice == "1":
+        while True:
+            if not is_logged_in:
+                print("1. Login")
+                print("2. Signup")
+                print("3. Exit")
+                choice = input("Select an option: ")
+
+                if choice == "1":
+                    user_name, user_id = login()
+                    if user_name != "":
+                        is_logged_in = True
+                        print("Login successful!")
+                    else:
+                        print("Login failed. Please try again.")
+                elif choice == "2":
+                    signup()
+                elif choice == "3":
+                    print("Goodbye!")
+                    break
                 else:
-                    print("Login failed. Please try again.")
-            elif choice == "2":
-                signup()
-            elif choice == "3":
-                print("Goodbye!")
-                break
+                    print("Invalid option. Try again.")
             else:
-                print("Invalid option. Try again.")
-        else:
-            print("1. Show User Profile")
-            print("2. Search for Games")
-            print("3. Add Friends")
-            print("4. Buy Game Items")
-            print("5. Add Fund")
-            print("9. Logout")
-            print("0. Exit")
-            choice = input("Select an option: ")
+                print("1. Show User Profile")
+                print("2. Search for Games")
+                print("3. Add Friends")
+                print("4. Buy Game Items")
+                print("5. Add Fund")
+                print("9. Logout")
+                print("0. Exit")
+                choice = input("Select an option: ")
 
-            if choice == "1":
-                user_name = input("Enter User Name to view profile: ")
-                show_user_profile(user_name)
-            elif choice == "2":
-                keywords = input("Enter Keywords to Search for Games: ")
-                search_games(keywords)
-            elif choice == "3":
-                friend_name = input("Enter User's Name: ")
-                add_friend(user_name, friend_name)
-            elif choice == "4":
-                game_id = input("Enter Game ID: ")
-                item_id = input("Enter Item ID (1 for the game itself): ")
-                buy_item(user_id, game_id, item_id)
-            elif choice == "5":
-                amount = input("Enter Amount: ")
-                add_fund(user_id, amount)
-            elif choice == "9":
-                print("Logging out...")
-                is_logged_in = False
-                user_name = None
-                user_id = 0
-            elif choice == "0":
-                print("Goodbye!")
-                break
+                if choice == "1":
+                    user_name = input("Enter User Name to view profile: ")
+                    show_user_profile(user_name)
+                elif choice == "2":
+                    keywords = input("Enter Keywords to Search for Games: ")
+                    search_games(keywords)
+                elif choice == "3":
+                    friend_name = input("Enter User's Name: ")
+                    add_friend(user_name, friend_name)
+                elif choice == "4":
+                    game_id = input("Enter Game ID: ")
+                    item_id = input("Enter Item ID (1 for the game itself): ")
+                    buy_item(user_id, game_id, item_id)
+                elif choice == "5":
+                    amount = input("Enter Amount: ")
+                    add_fund(user_id, amount)
+                elif choice == "9":
+                    print("Logging out...")
+                    is_logged_in = False
+                    user_name = None
+                    user_id = 0
+                elif choice == "0":
+                    print("Goodbye!")
+                    break
+                else:
+                    print("Invalid option. Try again.")
+    elif choice == "2":
+        while True:
+            if not is_logged_in:
+                print("1. Login")
+                print("2. Signup")
+                print("3. Exit")
+                choice = input("Select an option: ")
+
+                if choice == "1":
+                    user_name, user_id = login()
+                    if user_name != "":
+                        is_logged_in = True
+                        print("Login successful!")
+                    else:
+                        print("Login failed. Please try again.")
+                elif choice == "2":
+                    signup()
+                elif choice == "3":
+                    print("Goodbye!")
+                    break
+                else:
+                    print("Invalid option. Try again.")
             else:
-                print("Invalid option. Try again.")
+                print("1. Add Games")
+                print("2. Change Price")
+                print("3. Add Achievement")
+                print("4. Add Item")
+                print("5. View Games")
+                print("9. Logout")
+                print("0. Exit")
+                choice = input("Select an option: ")
+
+                if choice == "1":
+                    game_name = input("Enter Game Name: ")
+                    game_description = input("Enter Game Description: ")
+                    system_requirements = input("Enter System Requirements: ")
+                    original_price = input("Enter Original Price: ")
+                    special_offer = input("Enter Special Offer: ")
+                    adding_games(user_id, game_name, game_description, system_requirements, int(original_price), float(special_offer))
+                elif choice == "2":
+                    game_id = input("Enter Game ID: ")
+                    item_id = input("Enter Item ID: ")
+                    special_offer = input("Enter Special Offer: ")
+                    changing_price(user_id, game_id, item_id, float(special_offer))
+                elif choice == "3":
+                    game_id = input("Enter Game ID: ")
+                    achievement_name = input("Enter Achievement Name: ")
+                    achievement_description = input("Enter Acievement Description: ")
+                    adding_achievement(user_id, game_id, achievement_name, achievement_description)
+                elif choice == "4":
+                    game_id = input("Enter Game ID: ")
+                    item_id = input("Enter Item ID: ")
+                    original_price = input("Enter Original Price: ")
+                    special_offer = input("Enter Special Offer: ")
+                    adding_item(user_id, game_id, item_id, int(original_price), float(special_offer))
+                elif choice == "5":
+                    view_games(user_id)
+                elif choice == "9":
+                    print("Logging out...")
+                    is_logged_in = False
+                    user_name = None
+                    user_id = 0
+                elif choice == "0":
+                    print("Goodbye!")
+                    break
+                else:
+                    print("Invalid option. Try again.")
 
 if __name__ == "__main__":
     main()

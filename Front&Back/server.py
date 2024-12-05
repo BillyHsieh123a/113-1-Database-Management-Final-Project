@@ -567,16 +567,16 @@ def publisher_adding_games(publisher_id, game_name, game_description, system_req
         # Insert into game_item with game_id and item_id set to 1
         cur.execute(
             """
-            INSERT INTO public."game_item" (game_id, item_id, original_price, current_price, special_offer, release_date)
-            VALUES (%s, 1, %s, %s, %s, %s, NOW())
+            INSERT INTO public."game_item" (item_id, original_price, current_price, special_offer, release_date)
+            VALUES (%s, %s, %s, %s, %s, NOW())
             """,
-            (game_id, original_price, current_price, special_offer)
+            (1, original_price, current_price, special_offer)
         )
 
          # Insert into game_publisher with game_id and publisher_id
         cur.execute(
             """
-            INSERT INTO public."game_publisher" (game_id, publisher_id)
+            INSERT INTO public."game_publishers" (game_id, publisher_id)
             VALUES (%s, %s)
             """,
             (game_id, publisher_id)
@@ -633,7 +633,7 @@ def publisher_changing_price(publisher_id, game_id, item_id, special_offer):
         cur.execute(
             """
             SELECT * 
-            FROM public."game_publisher"
+            FROM public."game_publishers"
             WHERE publisher_id = %s AND game_id = %s
             """,
             (publisher_id, game_id)
@@ -711,7 +711,7 @@ def publisher_adding_achievement(publisher_id, game_id, achievement_name, achiev
         cur.execute(
             """
             SELECT * 
-            FROM public."game_publisher"
+            FROM public."game_publishers"
             WHERE publisher_id = %s AND game_id = %s
             """,
             (publisher_id, game_id)
@@ -776,7 +776,7 @@ def publisher_adding_item(publisher_id, game_id, item_id, original_price, specia
         cur.execute(
             """
             SELECT * 
-            FROM public."game_publisher"
+            FROM public."game_publishers"
             WHERE publisher_id = %s AND game_id = %s
             """,
             (publisher_id, game_id)
@@ -846,7 +846,7 @@ def publisher_view_games(publisher_id):
         cur.execute(
             """
             SELECT game_id 
-            FROM public."game_publisher"
+            FROM public."game_publishers"
             WHERE publisher_id = %s
             """,
             (publisher_id,)
