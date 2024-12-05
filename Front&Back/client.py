@@ -212,6 +212,47 @@ def adding_achievement(publisher_id, game_id, achievement_name, achievement_desc
     except requests.exceptions.RequestException as e:
         print(f"Request error: {e}")
 
+def adding_item(publisher_id, game_id, item_id, original_price, special_offer):
+    headers = {'Content-Type': 'application/json'}
+    
+    data = {
+        'publisher_id': publisher_id,
+        'game_id': game_id,
+        'item_id': item_id,
+        'original_price': original_price,
+        'special_offer': special_offer,
+    }
+
+    try:
+        # Send POST request to the server
+        response = requests.post(f"{SERVER_URL}/adding_item", json=data, headers=headers)
+        
+        # Check if the request was successful
+        if response.status_code == 200:
+            result = response.json()
+            print(result['message'])
+        else:
+            result = response.json()
+            print(f"Error: {result['error']}")
+    except requests.exceptions.RequestException as e:
+        print(f"Request error: {e}")
+
+def view_games(publisher_id):
+    try:
+        response = requests.get(f"{SERVER_URL}/view_games", params={"publisher_id": publisher_id})
+        if response.status_code == 200:
+            games = response.json()
+            if games:
+                print("Found Games:")
+                for game in games:
+                    print(f"{game['game_id']}: {game['game_name']}")
+            else:
+                print("No games found for the given keywords.")
+        else:
+            print(f"Error: {response.json().get('error')}")
+    except requests.exceptions.RequestException as e:
+        print(f"An error occurred while trying to connect to the server: {e}")
+
 def main():
     is_logged_in = False
     user_name = ""

@@ -645,7 +645,8 @@ def publisher_changing_price(publisher_id, game_id, item_id, special_offer):
         # Calculate the new current price based on the special offer
         cur.execute(
             """
-            SELECT original_price FROM public."game_item"
+            SELECT original_price 
+            FROM public."game_item"
             WHERE game_id = %s AND item_id = %s
             """,
             (game_id, item_id)
@@ -759,6 +760,142 @@ def adding_achievement():
     if "error" in result:
         return jsonify(result), 400
     return jsonify(result), 200
+
+def publisher_adding_item(publisher_id, game_id, item_id, original_price, special_offer):
+    conn = None
+    cur = None
+
+    try:
+        if not all([publisher_id, game_id, item_id, original_price, special_offer]):
+            raise ValueError("Invalid input. Please ensure all inputs are valid.")
+
+        # Connect to the PostgreSQL database
+        conn = get_connection()
+        cur = conn.cursor()
+
+        cur.execute(
+            """
+            SELECT * 
+            FROM public."game_publisher"
+            WHERE publisher_id = %s AND game_id = %s
+            """,
+            (publisher_id, game_id)
+        )
+        game_publisher_result = cur.fetchone()
+        if game_publisher_result is None:
+            return {"error": "You don't own the game!!!"}
+
+        # Calculate current price based on the special offer
+        current_price = int(original_price * special_offer)
+
+        # Insert into game_item with an auto-generated item_id
+        cur.execute(
+            """
+            INSERT INTO public."game_item" (game_id, item_id, original_price, current_price, special_offer, release_date)
+            VALUES (%s, %s, %s, %s, %s, NOW())
+            """,
+            (game_id, item_id, original_price, current_price, special_offer)
+        )
+
+        # 提交變更
+        conn.commit()
+        return {"message": f"Add item {item_id} to game {game_id} successfully."}
+    except Exception as e:
+        if conn:
+            conn.rollback()
+        return {"error": f"An error occurred: {e}"}
+    finally:
+        # 關閉游標與連接
+        if cur:
+            cur.close()
+        if conn:
+            conn.close()
+
+@app.route('/adding_item', methods=['POST'])
+def adding_item():
+    data = request.get_json()
+    publisher_id = data.get('publisher_id')
+    game_id = data.get('game_id')
+    item_id = data.get('item_id')
+    original_price = data.get('original_price')
+    special_offer = data.get('special_offer')
+
+    if not all([publisher_id, game_id, item_id, original_price, special_offer]):
+        return jsonify({"error": "Missing required fields."}), 400
+
+
+    result = publisher_adding_item(publisher_id, game_id, item_id, original_price, special_offer)
+
+    if "error" in result:
+        return jsonify(result), 400
+    return jsonify(result), 200
+
+def publisher_view_games(publisher_id):
+    conn = None
+    cur = None
+
+    try:
+        if not all([publisher_id]):
+            raise ValueError("Invalid input. Please ensure all inputs are valid.")
+
+        # Connect to the PostgreSQL database
+        conn = get_connection()
+        cur = conn.cursor()
+
+        # Query to get game_id for the given publisher_id from game_publisher table
+        cur.execute(
+            """
+            SELECT game_id 
+            FROM public."game_publisher"
+            WHERE publisher_id = %s
+            """,
+            (publisher_id,)
+        )
+
+        # Fetch all the game_ids
+        game_ids = cur.fetchall()
+
+        # Use game_ids to get game_name from game table
+        game_details = []
+        for game_id in game_ids:
+            cur.execute(
+                """
+                SELECT game_name, game_id FROM public."game"
+                WHERE game_id = %s
+                """,
+                (game_id[0],)
+            )
+            game_details.append(cur.fetchone())
+        
+        return game_details
+    except Exception as e:
+        if conn: 
+            conn.rollback()
+        return {"error": f"An error occurred: {e}"}
+    finally:
+        # 關閉游標與連接
+        if cur:
+            cur.close()
+        if conn:
+            conn.close()
+
+@app.route('/view_games', methods=['GET'])
+def view_games():
+    publisher_id = request.args.get('publisher_id', '')
+    if not publisher_id:
+        return jsonify({"error": "publisher_id is required"}), 400
+
+    games = publisher_view_games(publisher_id)
+    if "error" in games:
+        return jsonify(games), 400
+    elif not games:
+        return jsonify({"error": "Game not found"}), 404
+
+    
+    # Return game results
+    games = [{"game_id": game[0], "game_name": game[1]} for game in games]
+    return jsonify(games)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
