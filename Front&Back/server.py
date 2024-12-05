@@ -216,6 +216,67 @@ def search_for_games():
     games = [{"game_id": game[0], "game_name": game[1]} for game in search_results]
     return jsonify(games)
 
+def user_list_game_items(game_id):
+    conn = None
+    cur = None
+    try:
+        # Establish database connection
+        conn = get_connection()
+        cur = conn.cursor()
+
+        # Execute the SELECT query
+        cur.execute(
+            """
+            SELECT game_id, item_id, current_price
+            FROM public."game_item"
+            WHERE game_id = %s
+            """,
+            (game_id,)
+        )
+
+        # Fetch all matching rows
+        game_items = cur.fetchall()
+
+        # Return the results
+        return game_items
+
+    except OperationalError as e:
+        if conn:
+            conn.rollback()
+        return {"error": f"Database connection error: {e}"}
+    except DataError as e:
+        if conn:
+            conn.rollback()
+        return {"error": f"Invalid input data: {e}"}
+    except Exception as e:
+        if conn:
+            conn.rollback()
+        return {"error": f"An unexpected error occurred: {e}"}
+    finally:
+        # Cleanup resources
+        if cur:
+            try:
+                cur.close()
+            except InterfaceError as cleanup_error:
+                return {"error": f"Error closing cursor: {cleanup_error}"}
+        if conn:
+            try:
+                conn.close()
+            except InterfaceError as cleanup_error:
+                return {"error": f"Error closing connection: {cleanup_error}"}
+
+@app.route('/list_game_items', methods=['GET'])
+def list_game_items():
+    game_id = request.args.get('game_id')
+
+    search_results = user_list_game_items(game_id)
+    if "error" in search_results:
+        return jsonify(search_results), 400
+    
+    # Return game results
+    items = [{"game_id": item[0], "item_id": item[1], "current_price": item[2]} for item in search_results]
+    return jsonify(items)
+
 def add_friend(user_name, friend_name):
     conn = None
     cur = None

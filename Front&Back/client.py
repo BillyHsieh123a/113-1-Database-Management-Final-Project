@@ -82,6 +82,26 @@ def search_games(keywords):
     except requests.exceptions.RequestException as e:
         print(f"An error occurred while trying to connect to the server: {e}")
 
+def list_game_items(game_id):
+    if not all([game_id]):
+        print("Enter game_id to list its items.")
+        return
+
+    try:
+        response = requests.get(f"{SERVER_URL}/list_game_items", params={"game_id": game_id})
+        if response.status_code == 200:
+            items = response.json()
+            if items:
+                print("Found Games:")
+                for item in items:
+                    print(f"{item['game_id']}, {item['item_id']}: {item['current_price']}")
+            else:
+                print("No item found for the game.")
+        else:
+            print(f"Error: {response.json().get('error')}")
+    except requests.exceptions.RequestException as e:
+        print(f"An error occurred while trying to connect to the server: {e}")
+
 def add_friend(user_name, friend_name):
     if not all([user_name, friend_name]):
         print("Both user_name and friend_name are required.")
@@ -322,6 +342,7 @@ def main():
                 print("3. Add Friends")
                 print("4. Buy Game Items")
                 print("5. Add Fund")
+                print("6. List Game Items")
                 print("9. Logout")
                 print("0. Exit")
                 choice = input("Select an option: ")
@@ -342,6 +363,9 @@ def main():
                 elif choice == "5":
                     amount = input("Enter Amount: ")
                     add_fund(user_id, amount)
+                elif choice == "6":
+                    game_id = input("Enter Game ID: ")
+                    list_game_items(game_id)
                 elif choice == "9":
                     print("Logging out...")
                     is_logged_in = False
