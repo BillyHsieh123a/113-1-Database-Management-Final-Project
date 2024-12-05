@@ -567,10 +567,10 @@ def publisher_adding_games(publisher_id, game_name, game_description, system_req
         # Insert into game_item with game_id and item_id set to 1
         cur.execute(
             """
-            INSERT INTO public."game_item" (item_id, original_price, current_price, special_offer, release_date)
+            INSERT INTO public."game_item" (game_id, item_id, original_price, current_price, special_offer, release_date)
             VALUES (%s, %s, %s, %s, %s, NOW())
             """,
-            (1, original_price, current_price, special_offer)
+            (game_id, 1, original_price, current_price, special_offer)
         )
 
          # Insert into game_publisher with game_id and publisher_id
@@ -860,7 +860,7 @@ def publisher_view_games(publisher_id):
         for game_id in game_ids:
             cur.execute(
                 """
-                SELECT game_name, game_id FROM public."game"
+                SELECT game_id, game_name FROM public."game"
                 WHERE game_id = %s
                 """,
                 (game_id[0],)
@@ -895,6 +895,49 @@ def view_games():
     # Return game results
     games = [{"game_id": game[0], "game_name": game[1]} for game in games]
     return jsonify(games)
+
+@app.route('/publisher_signup', methods=['POST'])
+def publisher_signup():
+    # data = request.json
+    # password_hashed = hash_password(data['password'])
+    data = request.get_json()
+    publisher_name = data.get('publisher_name')
+    description = data.get('description')
+
+    if not all([publisher_name]):
+            raise ValueError("Invalid input. Please ensure all inputs are valid.")
+
+    query = """
+    INSERT INTO public."publishers" (publisher_name, description)
+    VALUES (%s, %s)
+    """
+    values = (publisher_name, description)
+
+    try:
+        execute_query(query, values)
+        return jsonify({"message": "Publisher successfully registered!"}), 201
+    except Exception as e:
+
+        return jsonify({"error": str(e)}), 400
+
+@app.route('/publisher_login', methods=['POST'])
+def publisher_login():
+    data = request.get_json()
+    publisher_name = data.get('publisher_name')
+
+    query = """
+    SELECT * FROM public."publishers"
+    WHERE publisher_name = %s
+    """
+    try:
+        result = execute_query(query, (publisher_name,))
+        # print(result[0][0])
+        if result:
+            return jsonify({"message": f"{result[0][0]}"}), 200
+        else:
+            return jsonify({"error": "Invalid publisher_name."}), 401
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
 
 
 if __name__ == "__main__":

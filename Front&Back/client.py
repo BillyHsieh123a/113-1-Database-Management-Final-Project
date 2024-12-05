@@ -38,7 +38,7 @@ def login():
         return user_data["user_name"], response.json()["message"]
     else:
         print(f"Error: {response.json().get('error')}")
-        return ""
+        return "", 0
 
 def show_user_profile(user_id):
     response = requests.get(f"{SERVER_URL}/show_user_profile", params={"user_id": user_id})
@@ -253,6 +253,33 @@ def view_games(publisher_id):
     except requests.exceptions.RequestException as e:
         print(f"An error occurred while trying to connect to the server: {e}")
 
+def publisher_signup():
+    print("Signup:")
+    publisher_data = {
+        "publisher_name": input("Publisher Name (max 20 chars): "),
+        "description": input("Description (max 100 chars, optional): ") or None
+    }
+
+    response = requests.post(f"{SERVER_URL}/publisher_signup", json=publisher_data)
+    if response.status_code == 201:
+        print(response.json()["message"])
+    else:
+        print(f"Error: {response.json().get('error')}")
+
+def publisher_login():
+    print("Login:")
+    publisher_data = {
+        "publisher_name": input("Publisher Name: ")
+    }
+
+    response = requests.post(f"{SERVER_URL}/publisher_login", json=publisher_data)
+    if response.status_code == 200:
+        print("Succeeded!\n")
+        return publisher_data["publisher_name"], response.json()["message"]
+    else:
+        print(f"Error: {response.json().get('error')}")
+        return "", 0
+    
 def main():
     is_logged_in = False
     user_name = ""
@@ -267,6 +294,8 @@ def main():
     
     if choice == "1":
         while True:
+            print("GameHub")
+            print("User")
             if not is_logged_in:
                 print("1. Login")
                 print("2. Signup")
@@ -325,6 +354,8 @@ def main():
                     print("Invalid option. Try again.")
     elif choice == "2":
         while True:
+            print("GameHub")
+            print("Publisher")
             if not is_logged_in:
                 print("1. Login")
                 print("2. Signup")
@@ -332,14 +363,14 @@ def main():
                 choice = input("Select an option: ")
 
                 if choice == "1":
-                    user_name, user_id = login()
+                    user_name, user_id = publisher_login()
                     if user_name != "":
                         is_logged_in = True
                         print("Login successful!")
                     else:
                         print("Login failed. Please try again.")
                 elif choice == "2":
-                    signup()
+                    publisher_signup()
                 elif choice == "3":
                     print("Goodbye!")
                     break
