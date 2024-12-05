@@ -164,6 +164,54 @@ def adding_games(publisher_id, game_name, game_description, system_requirements,
     except requests.exceptions.RequestException as e:
         print(f"Request error: {e}")
 
+def changing_price(publisher_id, game_id, item_id, special_offer):
+    headers = {'Content-Type': 'application/json'}
+    
+    data = {
+        'publisher_id': publisher_id,
+        'game_id': game_id,
+        'item_id': item_id,
+        'special_offer': special_offer,
+    }
+
+    try:
+        # Send POST request to the server
+        response = requests.post(f"{SERVER_URL}/changing_price", json=data, headers=headers)
+        
+        # Check if the request was successful
+        if response.status_code == 200:
+            result = response.json()
+            print(result['message'])
+        else:
+            result = response.json()
+            print(f"Error: {result['error']}")
+    except requests.exceptions.RequestException as e:
+        print(f"Request error: {e}")
+
+def adding_achievement(publisher_id, game_id, achievement_name, achievement_description):
+    headers = {'Content-Type': 'application/json'}
+    
+    data = {
+        'publisher_id': publisher_id,
+        'game_id': game_id,
+        'achievement_name': achievement_name,
+        'achievement_description': achievement_description,
+    }
+
+    try:
+        # Send POST request to the server
+        response = requests.post(f"{SERVER_URL}/adding_achievement", json=data, headers=headers)
+        
+        # Check if the request was successful
+        if response.status_code == 200:
+            result = response.json()
+            print(result['message'])
+        else:
+            result = response.json()
+            print(f"Error: {result['error']}")
+    except requests.exceptions.RequestException as e:
+        print(f"Request error: {e}")
+
 def main():
     is_logged_in = False
     user_name = ""

@@ -695,5 +695,70 @@ def changing_price():
         return jsonify(result), 400
     return jsonify(result), 200
 
+def publisher_adding_achievement(publisher_id, game_id, achievement_name, achievement_description):
+    conn = None
+    cur = None
+
+    try:
+        if not all([publisher_id, game_id, achievement_name, achievement_description]):
+            raise ValueError("Invalid input. Please ensure all inputs are valid.")
+
+        # Connect to the PostgreSQL database
+        conn = get_connection()
+        cur = conn.cursor()
+
+        cur.execute(
+            """
+            SELECT * 
+            FROM public."game_publisher"
+            WHERE publisher_id = %s AND game_id = %s
+            """,
+            (publisher_id, game_id)
+        )
+        game_publisher_result = cur.fetchone()
+        if game_publisher_result is None:
+            return {"error": "You don't own the game!!!"}
+        
+        # Insert achievement into the achievements table with an auto-generated achievement_id
+        cur.execute(
+            """
+            INSERT INTO public."achievements" (game_id, achievement_name, achievement_description)
+            VALUES (%s, %s, %s)
+            """,
+            (game_id, achievement_name, achievement_description)
+        )
+
+        # 提交變更
+        conn.commit()
+        return {"message": f"Add achievement, {achievement_name}, for game {game_id}"}
+    except Exception as e:
+        if conn:
+            conn.rollback()
+        return {"error": f"An error occurred: {e}"}
+    finally:
+        # 關閉游標與連接
+        if cur:
+            cur.close()
+        if conn:
+            conn.close()
+
+@app.route('/adding_achievement', methods=['POST'])
+def adding_achievement():
+    data = request.get_json()
+    publisher_id = data.get('publisher_id')
+    game_id = data.get('game_id')
+    achievement_name = data.get('achievement_name')
+    achievement_description = data.get('achievement_description')
+
+    if not all([publisher_id, game_id, achievement_name, achievement_description]):
+        return jsonify({"error": "Missing required fields."}), 400
+
+
+    result = publisher_adding_achievement(publisher_id, game_id, achievement_name, achievement_description)
+
+    if "error" in result:
+        return jsonify(result), 400
+    return jsonify(result), 200
+
 if __name__ == "__main__":
     app.run(debug=True)
