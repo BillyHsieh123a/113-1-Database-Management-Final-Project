@@ -392,6 +392,19 @@ def user_buy_items(user_id, game_id, item_id):
         conn = get_connection()
         cur = conn.cursor()
 
+        if item_id != '1' and item_id != 1:
+            cur.execute(
+                """
+                SELECT *
+                FROM public."user_games" 
+                WHERE user_id = %s AND game_id = %s AND uninstalled_date = %s
+                """,
+                (user_id, game_id, None)
+            )
+            installed_result = cur.fetchone()
+            if installed_result is None:
+                raise ValueError("Buy game first!!!")
+
         # Fetch user fund with row locking
         cur.execute(
             """
@@ -444,15 +457,16 @@ def user_buy_items(user_id, game_id, item_id):
             (user_id, game_id, item_id, current_price, False)
         )
 
-        # Add record to user_games
-        cur.execute(
-            """
-            INSERT INTO public."user_games" 
-            (user_id, game_id, installed_date) 
-            VALUES (%s, %s, NOW())
-            """,
-            (user_id, game_id)
-        )
+        if item_id == '1' or item_id == 1:
+            # Add record to user_games
+            cur.execute(
+                """
+                INSERT INTO public."user_games" 
+                (user_id, game_id, installed_date) 
+                VALUES (%s, %s, NOW())
+                """,
+                (user_id, game_id)
+            )
 
         conn.commit()
         return True

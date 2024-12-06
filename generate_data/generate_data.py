@@ -42,7 +42,7 @@ def hash_password(password):
 
 
 # generate user
-user_num = 200
+user_num = 20
 fake = faker.Faker()
 fake_names = []
 for i in range(user_num):
@@ -84,8 +84,8 @@ with open("user_login_data.txt", "w") as file:
         execute_query(query, values)
 
         file.write(f"{fake_names[i]} {password}\n")
-
 print("finish generating user")
+
 
 # generate friends
 for user_name in fake_names:
@@ -127,8 +127,8 @@ for user_name in fake_names:
         """
         values = (friend_id, user_id)
         execute_query(query, values)
-
 print("finish generating user_friends")
+
 
 # generate user add fund
 for user_name in fake_names:
@@ -159,16 +159,14 @@ for user_name in fake_names:
         """
         values = (user_id, amount)
         execute_query(query, values)
-
 print("finish generating add_fund_record")
 
 
 #generate publisher
-publisher_num = 100
+publisher_num = 10
 fake_publisher_names = []
 for i in range(publisher_num):
     fake_publisher_names.append(f"{fake.user_name()[:6]}{uuid.uuid4().hex[:4]}")
-# print(fake_names)
 publisher_data = []
 with open("publisher_login_data.txt", "w") as file:
     for i in range(publisher_num):
@@ -185,7 +183,6 @@ with open("publisher_login_data.txt", "w") as file:
         execute_query(query, values)
 
         file.write(f"{fake_publisher_names[i]} {password}\n")
-
 publisher_ids = []
 query = """
 SELECT publisher_id
@@ -195,25 +192,27 @@ publisher_ids_result = execute_query(query, ())
 for publisher_id in publisher_ids_result:
     publisher_ids.append(publisher_id[0])
 print("finish generating publisher")
-# print(publisher_ids[0])
 
 
+# add games
 game_publisher = []
 game_data = []
+game_ids = []
+game_item_data = {}
 systems = ["Win 10", "Mac", "GameHub"]
-with open("fake_game_name.txt") as file:
+with open("fake_game_name.txt", encoding="utf-8") as file:
     fake_game_name_list = file.read()
 fake_game_names = fake_game_name_list.splitlines()
-
+i_game = 0
 for publisher_id in publisher_ids:
-    game_num = random.randint(1, 2)
-    for i in range(game_num):
+    game_num = random.randint(1, 3)
+    for _ in range(game_num):
         game_data.append({
-            "game_name": random.choice(fake_game_names[0]),
+            "game_name": fake_game_names[0],
             "game_description": fake.text(max_nb_chars=100),
             "system_requirements": random.choice(systems),
             "original_price" : random.randint(10, 100),
-            "special_offer" : round(random.uniform(0, 1), 2),
+            "special_offer" : round(random.uniform(0.5, 1), 2) if round(random.uniform(0, 1), 2) > 0.95 else 1,
         })
         del fake_game_names[0]
         query = """
@@ -221,7 +220,7 @@ for publisher_id in publisher_ids:
         VALUES (%s, %s, %s) 
         RETURNING game_id
         """
-        values = (game_data[i]['game_name'], game_data[i]['game_description'], game_data[i]['system_requirements'])
+        values = (game_data[i_game]['game_name'], game_data[i_game]['game_description'], game_data[i_game]['system_requirements'])
         
         try:
             conn = get_connection()
@@ -234,27 +233,138 @@ for publisher_id in publisher_ids:
                 conn.rollback() 
             raise e
         finally:
+            if cursor:
+                cursor.close()
             if conn:
                 conn.close()
 
         game_id = game_id_result[0][0]
+        game_ids.append(game_id)
 
-        current_price = int(game_data[i]['original_price'] * game_data[i]['special_offer'])
+        current_price = int(game_data[i_game]['original_price'] * game_data[i_game]['special_offer'])
         
         # Insert into game_item with game_id and item_id set to 1
         query = """
         INSERT INTO public."game_item" (game_id, item_id, original_price, current_price, special_offer, release_date)
         VALUES (%s, %s, %s, %s, %s, NOW())
         """
-        values = (game_id, 1, game_data[i]['original_price'], current_price, game_data[i]['special_offer'])
+        values = (game_id, 1, game_data[i_game]['original_price'], current_price, game_data[i_game]['special_offer'])
         execute_query(query, values)
+        game_item_data[game_id] = {}
+        game_item_data[game_id][1] = {
+            "original_price" : game_data[i_game]['original_price'],
+            "special_offer" : game_data[i_game]['special_offer'],
+        }
 
-         # Insert into game_publisher with game_id and publisher_id
+        # Insert into game_publisher with game_id and publisher_id
         query = """
         INSERT INTO public."game_publishers" (game_id, publisher_id)
         VALUES (%s, %s)
         """
         values = (game_id, publisher_id)
         execute_query(query, values)
-
+        i_game += 1
 print("finish adding games")
+
+
+# add items
+for game_id in game_ids:
+    item_num = random.randint(0, 2)
+    
+    for i in range(item_num):
+        game_item_data[game_id][i + 2] = {
+            "original_price" : random.randint(10, 100),
+            "special_offer" : round(random.uniform(0.5, 1), 2) if round(random.uniform(0, 1), 2) > 0.95 else 1,
+        }
+
+        current_price = int(game_item_data[game_id][i + 2]['original_price'] * game_item_data[game_id][i + 2]['special_offer'])
+
+        query = """
+        INSERT INTO public."game_item" (game_id, item_id, original_price, current_price, special_offer, release_date)
+        VALUES (%s, %s, %s, %s, %s, NOW())
+        """
+        values = (game_id, i + 2, game_item_data[game_id][i + 2]['original_price'], current_price, game_item_data[game_id][i + 2]['special_offer'])
+        execute_query(query, values)
+print("finish adding items")
+
+
+# buy item
+for user_name in fake_names:
+    query = """
+        SELECT user_id FROM public."user" WHERE user_name = %s;
+        """
+    values = (user_name,)
+    user_result = execute_query(query, values)
+    user_id = user_result[0][0]
+    
+    query = """
+        SELECT fund 
+        FROM public."user" 
+        WHERE user_id = %s FOR UPDATE;
+        """
+    values = (user_id,)
+    user_result = execute_query(query, values)
+    user_fund = user_result[0][0]
+
+    rate_to_buy_a_game = round(random.uniform(0.8, 1), 2)
+    rate_to_buy_other_item = round(random.uniform(0.6, 1), 2)
+    for game_id in game_item_data:
+        if round(random.uniform(0, 1), 2) < rate_to_buy_a_game:
+            continue
+        for item_id in game_item_data[game_id]:
+            if item_id != 1 and round(random.uniform(0, 1), 2) < rate_to_buy_other_item:
+                continue
+            current_price = int(game_item_data[game_id][item_id]['original_price'] * game_item_data[game_id][item_id]['special_offer'])
+
+            # Check if the user has sufficient funds
+            if user_fund < current_price and item_id == 1:
+                break
+            elif user_fund < current_price:
+                continue
+
+            # Deduct the item price from user funds
+            query = """
+                UPDATE public."user" 
+                SET fund = fund - %s 
+                WHERE user_id = %s;
+                """
+            values = (current_price, user_id)
+            execute_query(query, values)
+
+            # Add transaction
+            query = """
+                INSERT INTO public."buy_item" 
+                (user_id, game_id, item_id, price, timestamp, "isCancelled") 
+                VALUES (%s, %s, %s, %s, NOW(), %s)
+                """
+            values = (user_id, game_id, item_id, current_price, False)
+            execute_query(query, values)
+
+            # Add record to user_games
+            query = """
+                INSERT INTO public."user_games" 
+                (user_id, game_id, installed_date) 
+                VALUES (%s, %s, NOW())
+                """
+            values = (user_id, game_id)
+            execute_query(query, values)
+
+            user_fund -= current_price
+
+            if user_fund <= 0:
+                break
+
+        if user_fund <= 0:
+                break
+print("finish buy items")
+
+
+# add achievements
+
+# Insert achievement into the achievements table with an auto-generated achievement_id
+# query = """
+# INSERT INTO public."achievements" (game_id, achievement_name, achievement_description)
+# VALUES (%s, %s, %s)
+# """
+# values = (game_id, achievement_name, achievement_description)
+# execute_query(query, values)
