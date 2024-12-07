@@ -13,7 +13,7 @@ def get_connection():
     return psycopg2.connect(
         dbname="DB_Final_Project",
         user="postgres",
-        password="000000",
+        password="bear123321a",
         host="localhost",
     )
 
