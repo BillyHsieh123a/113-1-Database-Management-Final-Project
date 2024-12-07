@@ -311,7 +311,8 @@ def main():
     print("1. User")
     print("2. Publisher")
     choice = input("Select an option: ")
-    
+    print("################################################")
+
     if choice == "1":
         while True:
             print("GameHub")
@@ -376,6 +377,7 @@ def main():
                     break
                 else:
                     print("Invalid option. Try again.")
+            print("################################################")
     elif choice == "2":
         while True:
             print("GameHub")
@@ -445,6 +447,7 @@ def main():
                     break
                 else:
                     print("Invalid option. Try again.")
+            print("################################################")
 
 if __name__ == "__main__":
     main()

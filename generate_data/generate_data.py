@@ -40,9 +40,34 @@ def hash_password(password):
     full_hash = hashlib.sha256(password.encode()).hexdigest()
     return full_hash[:20]
 
-
+# 
+user_num = 2000
+friend_min = 0
+friedn_max = 5
+add_fund_min = 1
+add_fund_max = 10
+add_fund_value_min = 100
+add_fund_value_max = 1000
+publisher_num = 100
+game_num_for_each_publisher_min = 1
+game_num_for_each_publisher_max = 8
+game_original_price_min = 10
+game_original_price_max = 50
+rate_of_games_have_special_offer = 0.95
+special_offer_min = 0.6
+systems = ["Win 10", "Mac", "GameHub"]
+item_num_min = 0
+item_num_max = 5
+item_original_price_min = 1
+item_original_price_max = 30
+rate_of_items_have_special_offer = 0.95
+rate_not_to_buy_a_game_min = 0.85
+rate_to_buy_other_item_min = 0.6
+achievements_num_min = 1
+achievements_num_max = 3
+rate_of_games_not_having_achievements = 0.8
 # generate user
-user_num = 20
+
 fake = faker.Faker()
 fake_names = []
 for i in range(user_num):
@@ -91,7 +116,7 @@ print("finish generating user")
 for user_name in fake_names:
     random_frined_names =[]
     while True:
-        random_frined_names = random.sample(fake_names, random.randint(1, 2))
+        random_frined_names = random.sample(fake_names, random.randint(friend_min, friedn_max))
         if user_name not in random_frined_names:
             break
 
@@ -141,9 +166,9 @@ for user_name in fake_names:
     user_result = execute_query(query, values)
     user_id = user_result[0][0]
 
-    add_fund_times = random.randint(1, 3)
+    add_fund_times = random.randint(add_fund_min, add_fund_max)
     for i in range(add_fund_times):
-        amount = random.randint(1000, 5000)
+        amount = random.randint(add_fund_value_min, add_fund_value_max)
         query = """
         UPDATE public."user" 
         SET fund = fund + %s
@@ -163,7 +188,6 @@ print("finish generating add_fund_record")
 
 
 #generate publisher
-publisher_num = 10
 fake_publisher_names = []
 for i in range(publisher_num):
     fake_publisher_names.append(f"{fake.user_name()[:6]}{uuid.uuid4().hex[:4]}")
@@ -185,9 +209,9 @@ with open("publisher_login_data.txt", "w") as file:
         file.write(f"{fake_publisher_names[i]} {password}\n")
 publisher_ids = []
 query = """
-SELECT publisher_id
-FROM public."publishers"
-"""
+    SELECT publisher_id
+    FROM public."publishers"
+    """
 publisher_ids_result = execute_query(query, ())
 for publisher_id in publisher_ids_result:
     publisher_ids.append(publisher_id[0])
@@ -199,20 +223,23 @@ game_publisher = []
 game_data = []
 game_ids = []
 game_item_data = {}
-systems = ["Win 10", "Mac", "GameHub"]
 with open("fake_game_name.txt", encoding="utf-8") as file:
     fake_game_name_list = file.read()
 fake_game_names = fake_game_name_list.splitlines()
 i_game = 0
 for publisher_id in publisher_ids:
-    game_num = random.randint(1, 3)
+    if not fake_game_names:
+        break
+    game_num = random.randint(game_num_for_each_publisher_min, game_num_for_each_publisher_max)
     for _ in range(game_num):
+        if not fake_game_names:
+            break
         game_data.append({
             "game_name": fake_game_names[0],
             "game_description": fake.text(max_nb_chars=100),
             "system_requirements": random.choice(systems),
-            "original_price" : random.randint(10, 100),
-            "special_offer" : round(random.uniform(0.5, 1), 2) if round(random.uniform(0, 1), 2) > 0.95 else 1,
+            "original_price" : random.randint(game_original_price_min, game_original_price_max),
+            "special_offer" : round(random.uniform(special_offer_min, 1), 2) if round(random.uniform(0, 1), 2) > rate_of_games_have_special_offer else 1,
         })
         del fake_game_names[0]
         query = """
@@ -269,12 +296,11 @@ print("finish adding games")
 
 # add items
 for game_id in game_ids:
-    item_num = random.randint(0, 2)
-    
+    item_num = random.randint(item_num_min, item_num_max)
     for i in range(item_num):
         game_item_data[game_id][i + 2] = {
-            "original_price" : random.randint(10, 100),
-            "special_offer" : round(random.uniform(0.5, 1), 2) if round(random.uniform(0, 1), 2) > 0.95 else 1,
+            "original_price" : random.randint(item_original_price_min, item_original_price_max),
+            "special_offer" : round(random.uniform(special_offer_min, 1), 2) if round(random.uniform(0, 1), 2) > rate_of_items_have_special_offer else 1,
         }
 
         current_price = int(game_item_data[game_id][i + 2]['original_price'] * game_item_data[game_id][i + 2]['special_offer'])
@@ -306,10 +332,10 @@ for user_name in fake_names:
     user_result = execute_query(query, values)
     user_fund = user_result[0][0]
 
-    rate_to_buy_a_game = round(random.uniform(0.8, 1), 2)
-    rate_to_buy_other_item = round(random.uniform(0.6, 1), 2)
+    rate_not_to_buy_a_game = round(random.uniform(rate_not_to_buy_a_game_min, 1), 2)    
+    rate_to_buy_other_item = round(random.uniform(rate_to_buy_other_item_min, 1), 2)
     for game_id in game_item_data:
-        if round(random.uniform(0, 1), 2) < rate_to_buy_a_game:
+        if round(random.uniform(0, 1), 2) < rate_not_to_buy_a_game:
             continue
         for item_id in game_item_data[game_id]:
             if item_id != 1 and round(random.uniform(0, 1), 2) < rate_to_buy_other_item:
@@ -360,11 +386,30 @@ print("finish buy items")
 
 
 # add achievements
+with open("achievement_names_and_descriptions.txt", encoding="utf-8") as file:
+    achievement_names_and_descriptions_list = file.read()
+achievements = achievement_names_and_descriptions_list.splitlines()
+
+# Splitting the list into name and description
+achievement_names_and_descriptions = [achievement.split(": ", 1) for achievement in achievements]
 
 # Insert achievement into the achievements table with an auto-generated achievement_id
-# query = """
-# INSERT INTO public."achievements" (game_id, achievement_name, achievement_description)
-# VALUES (%s, %s, %s)
-# """
-# values = (game_id, achievement_name, achievement_description)
-# execute_query(query, values)
+for game_id in game_ids:
+    if not achievement_names_and_descriptions:
+        break
+    achievements_num = random.randint(achievements_num_min, achievements_num_max) if round(random.uniform(0, 1), 2) > rate_of_games_not_having_achievements else 0
+    for _ in range(achievements_num):
+        if not achievement_names_and_descriptions:
+            break
+        achievement_name = achievement_names_and_descriptions[0][0]
+        achievement_description = achievement_names_and_descriptions[0][1]
+
+        query = """
+            INSERT INTO public."achievements" (game_id, achievement_name, achievement_description)
+            VALUES (%s, %s, %s)
+            """
+        values = (game_id, achievement_name, achievement_description)
+        execute_query(query, values)
+        del achievement_names_and_descriptions[0]
+
+print("finish add achievements")
