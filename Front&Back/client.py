@@ -38,7 +38,7 @@ def login():
         return user_data["user_name"], response.json()["message"]
     else:
         print(f"Error: {response.json().get('error')}")
-        return ""
+        return "", 0
 
 def show_user_profile(user_id):
     response = requests.get(f"{SERVER_URL}/show_user_profile", params={"user_id": user_id})
@@ -77,6 +77,26 @@ def search_games(keywords):
                     print(f"{game['game_id']}: {game['game_name']}")
             else:
                 print("No games found for the given keywords.")
+        else:
+            print(f"Error: {response.json().get('error')}")
+    except requests.exceptions.RequestException as e:
+        print(f"An error occurred while trying to connect to the server: {e}")
+
+def list_game_items(game_id):
+    if not all([game_id]):
+        print("Enter game_id to list its items.")
+        return
+
+    try:
+        response = requests.get(f"{SERVER_URL}/list_game_items", params={"game_id": game_id})
+        if response.status_code == 200:
+            items = response.json()
+            if items:
+                print("Found Games:")
+                for item in items:
+                    print(f"{item['game_id']}, {item['item_id']}: {item['current_price']}")
+            else:
+                print("No item found for the game.")
         else:
             print(f"Error: {response.json().get('error')}")
     except requests.exceptions.RequestException as e:
@@ -253,6 +273,33 @@ def view_games(publisher_id):
     except requests.exceptions.RequestException as e:
         print(f"An error occurred while trying to connect to the server: {e}")
 
+def publisher_signup():
+    print("Signup:")
+    publisher_data = {
+        "publisher_name": input("Publisher Name (max 20 chars): "),
+        "description": input("Description (max 100 chars, optional): ") or None
+    }
+
+    response = requests.post(f"{SERVER_URL}/publisher_signup", json=publisher_data)
+    if response.status_code == 201:
+        print(response.json()["message"])
+    else:
+        print(f"Error: {response.json().get('error')}")
+
+def publisher_login():
+    print("Login:")
+    publisher_data = {
+        "publisher_name": input("Publisher Name: ")
+    }
+
+    response = requests.post(f"{SERVER_URL}/publisher_login", json=publisher_data)
+    if response.status_code == 200:
+        print("Succeeded!\n")
+        return publisher_data["publisher_name"], response.json()["message"]
+    else:
+        print(f"Error: {response.json().get('error')}")
+        return "", 0
+    
 def main():
     is_logged_in = False
     user_name = ""
@@ -267,6 +314,8 @@ def main():
     
     if choice == "1":
         while True:
+            print("GameHub")
+            print("User")
             if not is_logged_in:
                 print("1. Login")
                 print("2. Signup")
@@ -293,6 +342,7 @@ def main():
                 print("3. Add Friends")
                 print("4. Buy Game Items")
                 print("5. Add Fund")
+                print("6. List Game Items")
                 print("9. Logout")
                 print("0. Exit")
                 choice = input("Select an option: ")
@@ -313,6 +363,9 @@ def main():
                 elif choice == "5":
                     amount = input("Enter Amount: ")
                     add_fund(user_id, amount)
+                elif choice == "6":
+                    game_id = input("Enter Game ID: ")
+                    list_game_items(game_id)
                 elif choice == "9":
                     print("Logging out...")
                     is_logged_in = False
@@ -325,6 +378,8 @@ def main():
                     print("Invalid option. Try again.")
     elif choice == "2":
         while True:
+            print("GameHub")
+            print("Publisher")
             if not is_logged_in:
                 print("1. Login")
                 print("2. Signup")
@@ -332,14 +387,14 @@ def main():
                 choice = input("Select an option: ")
 
                 if choice == "1":
-                    user_name, user_id = login()
+                    user_name, user_id = publisher_login()
                     if user_name != "":
                         is_logged_in = True
                         print("Login successful!")
                     else:
                         print("Login failed. Please try again.")
                 elif choice == "2":
-                    signup()
+                    publisher_signup()
                 elif choice == "3":
                     print("Goodbye!")
                     break

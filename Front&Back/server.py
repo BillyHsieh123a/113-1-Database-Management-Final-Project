@@ -216,6 +216,67 @@ def search_for_games():
     games = [{"game_id": game[0], "game_name": game[1]} for game in search_results]
     return jsonify(games)
 
+def user_list_game_items(game_id):
+    conn = None
+    cur = None
+    try:
+        # Establish database connection
+        conn = get_connection()
+        cur = conn.cursor()
+
+        # Execute the SELECT query
+        cur.execute(
+            """
+            SELECT game_id, item_id, current_price
+            FROM public."game_item"
+            WHERE game_id = %s
+            """,
+            (game_id,)
+        )
+
+        # Fetch all matching rows
+        game_items = cur.fetchall()
+
+        # Return the results
+        return game_items
+
+    except OperationalError as e:
+        if conn:
+            conn.rollback()
+        return {"error": f"Database connection error: {e}"}
+    except DataError as e:
+        if conn:
+            conn.rollback()
+        return {"error": f"Invalid input data: {e}"}
+    except Exception as e:
+        if conn:
+            conn.rollback()
+        return {"error": f"An unexpected error occurred: {e}"}
+    finally:
+        # Cleanup resources
+        if cur:
+            try:
+                cur.close()
+            except InterfaceError as cleanup_error:
+                return {"error": f"Error closing cursor: {cleanup_error}"}
+        if conn:
+            try:
+                conn.close()
+            except InterfaceError as cleanup_error:
+                return {"error": f"Error closing connection: {cleanup_error}"}
+
+@app.route('/list_game_items', methods=['GET'])
+def list_game_items():
+    game_id = request.args.get('game_id')
+
+    search_results = user_list_game_items(game_id)
+    if "error" in search_results:
+        return jsonify(search_results), 400
+    
+    # Return game results
+    items = [{"game_id": item[0], "item_id": item[1], "current_price": item[2]} for item in search_results]
+    return jsonify(items)
+
 def add_friend(user_name, friend_name):
     conn = None
     cur = None
@@ -331,6 +392,19 @@ def user_buy_items(user_id, game_id, item_id):
         conn = get_connection()
         cur = conn.cursor()
 
+        if item_id != '1' and item_id != 1:
+            cur.execute(
+                """
+                SELECT *
+                FROM public."user_games" 
+                WHERE user_id = %s AND game_id = %s AND uninstalled_date = %s
+                """,
+                (user_id, game_id, None)
+            )
+            installed_result = cur.fetchone()
+            if installed_result is None:
+                raise ValueError("Buy game first!!!")
+
         # Fetch user fund with row locking
         cur.execute(
             """
@@ -383,15 +457,16 @@ def user_buy_items(user_id, game_id, item_id):
             (user_id, game_id, item_id, current_price, False)
         )
 
-        # Add record to user_games
-        cur.execute(
-            """
-            INSERT INTO public."user_games" 
-            (user_id, game_id, installed_date) 
-            VALUES (%s, %s, NOW())
-            """,
-            (user_id, game_id)
-        )
+        if item_id == '1' or item_id == 1:
+            # Add record to user_games
+            cur.execute(
+                """
+                INSERT INTO public."user_games" 
+                (user_id, game_id, installed_date) 
+                VALUES (%s, %s, NOW())
+                """,
+                (user_id, game_id)
+            )
 
         conn.commit()
         return True
@@ -567,10 +642,10 @@ def publisher_adding_games(publisher_id, game_name, game_description, system_req
         # Insert into game_item with game_id and item_id set to 1
         cur.execute(
             """
-            INSERT INTO public."game_item" (item_id, original_price, current_price, special_offer, release_date)
+            INSERT INTO public."game_item" (game_id, item_id, original_price, current_price, special_offer, release_date)
             VALUES (%s, %s, %s, %s, %s, NOW())
             """,
-            (1, original_price, current_price, special_offer)
+            (game_id, 1, original_price, current_price, special_offer)
         )
 
          # Insert into game_publisher with game_id and publisher_id
@@ -860,7 +935,7 @@ def publisher_view_games(publisher_id):
         for game_id in game_ids:
             cur.execute(
                 """
-                SELECT game_name, game_id FROM public."game"
+                SELECT game_id, game_name FROM public."game"
                 WHERE game_id = %s
                 """,
                 (game_id[0],)
@@ -895,6 +970,49 @@ def view_games():
     # Return game results
     games = [{"game_id": game[0], "game_name": game[1]} for game in games]
     return jsonify(games)
+
+@app.route('/publisher_signup', methods=['POST'])
+def publisher_signup():
+    # data = request.json
+    # password_hashed = hash_password(data['password'])
+    data = request.get_json()
+    publisher_name = data.get('publisher_name')
+    description = data.get('description')
+
+    if not all([publisher_name]):
+            raise ValueError("Invalid input. Please ensure all inputs are valid.")
+
+    query = """
+    INSERT INTO public."publishers" (publisher_name, description)
+    VALUES (%s, %s)
+    """
+    values = (publisher_name, description)
+
+    try:
+        execute_query(query, values)
+        return jsonify({"message": "Publisher successfully registered!"}), 201
+    except Exception as e:
+
+        return jsonify({"error": str(e)}), 400
+
+@app.route('/publisher_login', methods=['POST'])
+def publisher_login():
+    data = request.get_json()
+    publisher_name = data.get('publisher_name')
+
+    query = """
+    SELECT * FROM public."publishers"
+    WHERE publisher_name = %s
+    """
+    try:
+        result = execute_query(query, (publisher_name,))
+        # print(result[0][0])
+        if result:
+            return jsonify({"message": f"{result[0][0]}"}), 200
+        else:
+            return jsonify({"error": "Invalid publisher_name."}), 401
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
 
 
 if __name__ == "__main__":
