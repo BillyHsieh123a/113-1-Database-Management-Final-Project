@@ -10,7 +10,7 @@ def get_connection():
     return psycopg2.connect(
         dbname="DB_Final_Project",
         user="postgres",
-        password="bear123321a",
+        password="000000",
         host="localhost",
     )
 
@@ -720,9 +720,9 @@ def publisher_changing_price(publisher_id, game_id, item_id, special_offer):
         # Calculate the new current price based on the special offer
         cur.execute(
             """
-            SELECT original_price 
+            SELECT original_price
             FROM public."game_item"
-            WHERE game_id = %s AND item_id = %s
+            WHERE game_id = %s AND item_id = %s FOR UPDATE;
             """,
             (game_id, item_id)
         )

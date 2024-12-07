@@ -232,3 +232,281 @@ Surprise Tactician: Win a fight by using an unorthodox strategy.
 Metal Mastery: Upgrade every piece of metal equipment to the maximum level.
 Visionary: Predict and stop a trap before it activates.
 Overclocked: Use a machine to its breaking point without failure.
+Legendary Blacksmith: Craft a weapon of mythical status.
+The Collector: Obtain one of every item type in the game.
+The Unseen Blade: Defeat a boss using only stealth.
+Unbreakable Bond: Complete a game entirely in co-op.
+The Lone Wanderer: Complete the game without companions.
+Ultimate Ascension: Max out all character stats.
+Master Builder: Construct the largest possible structure in the game.
+Treasure Map Whisperer: Solve all treasure map puzzles.
+Echo of the Past: Discover an ancient hidden narrative.
+Speedrunner: Beat the game 50% faster than average.
+The Strategist: Win a complex fight using only tactical commands.
+Relentless Guardian: Protect an NPC across an entire level.
+Bringer of Balance: Resolve a major conflict without picking sides.
+Chaos Bringer: Trigger an event that disrupts the entire game world.
+Survivor’s Instinct: Escape a deadly ambush with no weapons.
+Maze Master: Escape every labyrinth in the game.
+Hunter’s Mastery: Track and hunt every rare animal.
+The Archivist: Find and catalog every collectible document.
+Unchained: Break free from every restraint in the game.
+Risk Runner: Take a massive risk for a game-changing reward.
+The Last Stand: Win a battle while outnumbered 5 to 1.
+Mapmaker: Fully uncover every map in the game.
+Shadow Whisperer: Learn secrets from an unlikely source.
+Elemental Overlord: Inflict all elemental effects in one fight.
+Quick on the Draw: Win a duel with perfect timing.
+The Long Shot: Hit an enemy from across the entire map.
+Puzzle King: Solve the most challenging puzzle on your first try.
+Walking Encyclopedia: Memorize all lore entries in the game.
+Ultimate Rivalry: Defeat your in-game rival on the hardest difficulty.
+Tactile Advantage: Win a battle using only environment-based attacks.
+The Final Word: Be the last player standing in a multiplayer match.
+Unyielding Spirit: Survive after running out of resources.
+Tech Wizard: Hack every terminal or mechanism.
+Sharp Reflexes: Dodge a trap right before it activates.
+The Mountain King: Reach the peak of every mountain.
+Sea Voyager: Discover every hidden island.
+Unstoppable Machine: Win a vehicle-based combat encounter flawlessly.
+Daredevil: Perform a risky maneuver without failing.
+Overpowered Creation: Build a tool with unmatched efficiency.
+Flawless Conqueror: Beat an entire level without any damage.
+Echo Hunter: Track down every sound-based clue.
+Perfect Strike: Land a critical hit at exactly the right moment.
+Codebreaker Supreme: Solve every cipher in the game.
+Master of the Forge: Repair every broken object.
+True Altruist: Help every NPC who asks for assistance.
+Battlefield General: Command allies to perfection.
+One Shot One Kill: Defeat a powerful enemy with a single attack.
+Guardian of History: Prevent the destruction of ancient artifacts.
+Master of Camouflage: Blend into every environment seamlessly.
+Unlikely Duo: Finish a task with an unlikely partner.
+Mechanical Overlord: Master every robot or machine in the game.
+Storm Chaser: Survive the most severe weather event.
+Protector of Secrets: Keep a critical in-game secret safe.
+The Eternal Flame: Keep a single torch lit through the entire level.
+Environmental Genius: Solve a problem using only natural elements.
+Master of All Trades: Perform every type of profession in the game.
+Precision Driver: Navigate an intense driving sequence without errors.
+Chameleon: Disguise yourself in every possible way.
+The Untouchable: Win a boss fight without getting hit.
+Gladiator Supreme: Win the ultimate arena championship.
+The Timekeeper: Finish a timed mission with seconds to spare.
+Ultimate Defender: Guard an objective through an entire siege.
+Lore Guardian: Protect an ancient secret from being revealed.
+Absolute Zero: Freeze every enemy in a level.
+Volcanic Fury: Use fire to dominate a battlefield.
+Wind Walker: Travel great distances using wind-based abilities.
+Waterborne: Swim through dangerous waters without harm.
+Perfect Predator: Defeat enemies without being detected.
+Master Negotiator: Resolve a conflict using only dialogue.
+Pacifist Victory: Win a game without harming anyone.
+Hidden Trailblazer: Discover a shortcut no one else noticed.
+Explosive Genius: Create the perfect explosive device.
+The Diplomat: Broker peace between two hostile factions.
+Master Diver: Dive to the deepest point of the ocean.
+Battlefield Savior: Save allies from overwhelming odds.
+The Opportunist: Turn an enemy’s trap against them.
+Silent Strike: Defeat an enemy before they notice you.
+Magical Weaver: Combine spells to create unique effects.
+Underdog Champion: Win a match when you were far behind.
+High-Flying Hero: Stay airborne during an entire combat sequence.
+Veteran Explorer: Complete all exploration objectives.
+Treasure Hoarder: Accumulate the highest value of loot.
+Aerial Ace: Win an aerial combat challenge flawlessly.
+Unbreakable Will: Resist every temptation in a moral-choice system.
+Frostbite Conqueror: Survive in freezing temperatures.
+Inferno Walker: Traverse a lava-filled area unscathed.
+Shadows and Dust: Vanish from sight and escape a perilous situation.
+Artisan of Light: Use light-based tools or weapons to solve challenges.
+Beastly Bond: Befriend the most ferocious creature in the game.
+Time Jumper: Solve a mystery involving multiple timelines.
+The Caretaker: Nurture and protect an important character.
+Unseen Savior: Rescue someone without revealing yourself.
+Energy Overload: Max out your energy bar for a powerful attack.
+Echo of the Elements: Use every elemental ability in a single encounter.
+Architect’s Vision: Plan and execute the perfect base layout.
+King of the Skies: Win a dogfight using advanced flying tactics.
+The Redeemer: Convert a villain to your side.
+Timeless Traveler: Stay alive in a time-affected region.
+The Storyteller: Discover every alternate ending.
+Eternal Patience: Wait hours in-game for an event to unfold.
+Mirror Match: Defeat an enemy with the exact same abilities as you.
+Unchained Fury: Break every restriction placed on your character.
+The Archivist: Fill the in-game encyclopedia completely.
+Arcane Scholar: Master the rarest magic spells.
+Infinite Resolve: Retry the same challenge until you win.
+Chaos Manager: Control a chaotic situation perfectly.
+The Whisperer: Communicate with every hidden NPC in the game.
+Master Strategist: Win a battle using every member of your team.
+Living Legend: Achieve maximum fame or notoriety.
+The Eternal Wanderer: Spend hours traveling with no destination.
+Supreme Artisan: Create a masterpiece with the crafting system.
+Wilderness Champion: Survive the harshest terrain in the game.
+Unbreakable Shield: Defend against 100 consecutive attacks.
+Trailblazer: Complete a new route no one else has.
+Mastermind: Outsmart the game’s most intelligent AI.
+Glacial Guardian: Protect an icy region from destruction.
+Infernal Protector: Defend a fiery realm.
+Seeker of Truths: Uncover every secret in the game.
+Windborne Voyager: Glide across massive distances.
+The Water Walker: Cross an entire ocean without swimming.
+Perfect Harmony: Perform a synchronized attack with your allies.
+Immortal Presence: Complete a task without a single ally being harmed.
+Master of Stealth: Finish the game without ever being spotted.
+The Finisher: Land the final blow on every major boss.
+Warden of the Lost: Rescue every captive or lost NPC.
+Tamer of the Wild: Dominate the wilderness without resources.
+The Ascendant: Reach a higher plane of existence.
+Master Duelist: Win a duel against every notable opponent.
+The Ultimate Creation: Build the strongest possible gear.
+The Great Escaper: Escape every trap without fail.
+Hidden Mastery: Use every hidden mechanic in the game.
+The Last Hope: Save a world on the brink of destruction.
+Boundary Breaker: Discover an area outside the intended game boundaries.
+The Adaptable Hero: Use 10 different playstyles in a single campaign.
+The Eternal Champion: Complete the hardest challenge mode flawlessly.
+Stormcaller: Control a storm to aid you in battle.
+Ocean Conqueror: Win a naval battle against overwhelming odds.
+Mastermind of Mischief: Prank or outwit every major NPC.
+Endless Seeker: Explore every secret corner of the game world.
+The Untouchable Shadow: Complete an entire game using only stealth.
+Silent Avenger: Eliminate all enemies in a level without being detected.
+Lone Voyager: Traverse the entire map without companions.
+Speed Demon: Complete a racing mission in record time.
+Paragon of Light: Resolve all conflicts peacefully.
+Crimson Warrior: Defeat 100 enemies in a single session.
+Overkill Specialist: Deal five times the necessary damage to an enemy.
+Master Tactician: Win a battle without taking damage or missing an attack.
+Unlikely Savior: Rescue an enemy who becomes an ally.
+Riddle Weaver: Craft your own puzzle for other players.
+Dynamic Duo: Complete an entire co-op campaign flawlessly.
+Impenetrable Fortress: Build a base that withstands the hardest siege.
+Deadly Silence: Neutralize all threats in a stealth mission.
+The Archivist’s Treasure: Collect all books and lore items.
+Daredevil’s Path: Take the most dangerous route and survive.
+Ascension: Reach the pinnacle of every tower in the game.
+The Phantom Blade: Defeat every boss using only melee stealth.
+Infinite Explorer: Explore the entire game world, including hidden zones.
+Tide Turner: Overcome a seemingly unwinnable battle.
+Ultimate Technician: Repair every damaged machine or mechanism.
+Champion of the Wilds: Defeat every apex predator in the game.
+Trail Marker: Place signs or markers in every major area.
+The Composer: Create an in-game melody using the music system.
+Lightning Reflexes: Dodge 100 consecutive attacks without taking damage.
+Blazing Trails: Set fire to five enemies simultaneously.
+Whispered Secrets: Uncover every hidden dialogue line.
+Hero’s Resolve: Face every fear-inducing challenge.
+Unstoppable Onslaught: Maintain a combo for 60 seconds.
+Aerial Acrobat: Perform all aerial stunts flawlessly.
+Master Cartographer: Map out every uncharted territory.
+The Defuser: Disarm five bombs with seconds to spare.
+Sky Walker: Stay airborne for an extended duration without touching the ground.
+The Strategist’s Gambit: Win a battle using only buffs and debuffs.
+Collector’s Dream: Fill your inventory with rare items only.
+Living Shield: Protect an ally from all damage in a fight.
+The Diplomat’s Edge: Persuade an enemy to leave peacefully.
+Perfectionist: Complete a level achieving 100% objectives.
+Master Gambler: Win the highest-stakes game in a gambling minigame.
+The Phoenix: Revive yourself three times in one fight.
+Shadow Puppeteer: Manipulate enemies to fight each other.
+Warrior of the Elements: Use fire, ice, and lightning in one battle.
+The Untouched: Complete a level without getting hit or healing.
+Ancient Guardian: Protect a relic from waves of enemies.
+Master of Layers: Solve a multi-dimensional puzzle.
+The Wandering Chef: Cook every available recipe in the game.
+Fool’s Gambit: Survive a choice that seemed certain to fail.
+Swift Rescuer: Save an NPC in record time.
+Breaker of Chains: Free all captives or prisoners in the game.
+Legendary Duelist: Defeat the most skilled AI opponent in one-on-one combat.
+Tamer of Shadows: Befriend the most elusive creature.
+The Chosen Path: Stick to your moral alignment through every decision.
+Sky Diver: Jump from the highest point in the game without dying.
+Hoarder Extraordinaire: Max out all your inventory slots.
+The Perfect Machine: Upgrade your vehicle to maximum specs.
+Living Forge: Craft every legendary item.
+Heart of Gold: Give away the maximum amount of resources to NPCs.
+The Great Equalizer: Take down the strongest enemy with the weakest weapon.
+Navigator Supreme: Plot the most efficient course through every area.
+Stormbringer: Call down weather effects to change the tide of battle.
+Immovable Object: Survive without dodging or moving in combat.
+The Unseen Path: Cross a level using only secret routes.
+Master Mechanic: Build every type of machine available.
+Critical Thinker: Land 50 critical hits in one game session.
+Master Key: Unlock every locked door or chest in the game.
+The Guiding Light: Escort a defenseless NPC to safety.
+Collector of Souls: Defeat every unique enemy type.
+Unbreakable Unity: Keep all your allies alive through the campaign.
+Crimson Vortex: Perform a spinning attack that takes out multiple foes.
+The Deep Diver: Find every underwater collectible.
+Perfect Restoration: Restore a destroyed structure to its original state.
+Chaos Controller: Use an enemy's abilities to defeat their own team.
+The Invisible Hand: Alter the economy to your favor.
+Storm Rider: Glide through the toughest weather conditions.
+Lightbearer: Use light-based weapons to defeat dark-themed enemies.
+The Endless Run: Complete a marathon challenge without stopping.
+Whisper of Legends: Find every hidden NPC with a unique backstory.
+Unstoppable Juggernaut: Break through every obstacle in your path.
+The Architect’s Vision: Recreate a famous building using in-game tools.
+Supreme Crafter: Master every crafting profession.
+The Puzzle Architect: Build a challenge others struggle to solve.
+King of the Mountain: Win every mountaintop duel.
+Ocean’s Echo: Listen to every in-game sound to find secrets.
+Time Keeper: Control time to achieve an impossible feat.
+Toxic Avenger: Survive in a poisoned area without antidotes.
+The Relic Hunter: Find every ancient artifact.
+Master of Gravity: Use gravity to manipulate objects and enemies.
+The Clutch Player: Win a crucial battle with only seconds remaining.
+Dynamic Designer: Customize every aspect of your character or base.
+Pathfinder’s Glory: Discover the fastest path through a labyrinth.
+Silent Symphony: Perform an in-game concert to entertain NPCs.
+The Watcher: Observe every cutscene or cinematic without skipping.
+Unwavering Faith: Follow a character’s story arc to its ultimate conclusion.
+The Bounty Collector: Complete every bounty mission.
+Echo of Eternity: Use sound to unlock hidden areas.
+Trailblazer of the Stars: Reach the edge of the game’s galaxy or map.
+Legendary Fencer: Parry every attack in a duel.
+Beast Tamer: Tame every type of mountable creature.
+The Perfect Storm: Use wind, water, and lightning to defeat a boss.
+Blazing Runner: Beat every time trial with a gold medal.
+Echo of Shadows: Use mirrors or reflections to solve a puzzle.
+Infinite Patience: Wait for a hidden event to occur naturally.
+Shapeshifter: Take on the form of every available creature.
+Master Cartwright: Build a perfect, efficient vehicle.
+Titan Slayer: Defeat the largest enemy in the game.
+Wind Whisperer: Use the environment to solve a complex puzzle.
+Ocean Explorer: Find every hidden cave underwater.
+The Last Laugh: Outsmart an enemy who underestimated you.
+Collector of Voices: Hear every line of dialogue in the game.
+Perfect Harmony: Use all team members in perfect synchronization.
+Pinnacle of Strength: Achieve maximum physical stats.
+Wise Protector: Escort a character while teaching them survival skills.
+Stormcaller Supreme: Summon the largest storm possible.
+Eternal Wanderer: Keep moving for the entirety of the game.
+The Golden Touch: Maximize your wealth or resources.
+Peacemaker: Reconcile two factions without bloodshed.
+Wrath of Nature: Summon the elements to destroy an enemy stronghold.
+Guardian Angel: Rescue someone with seconds to spare.
+Puzzle Weaver: Solve five interconnected puzzles simultaneously.
+Tide Turner: Win a decisive naval battle.
+Master of All Trades: Achieve proficiency in every skill.
+Time Traveler: Experience every timeline or alternate path.
+Infinite Resolve: Attempt and succeed after multiple failures.
+Ultimate Protector: Guard a key objective without damage.
+Frostborn Champion: Survive the harshest ice-based level.
+Infernal Challenger: Survive the deadliest fire-based level.
+The Untouched: Complete a game mode without using health items.
+Undying Loyalty: Keep a companion alive through every encounter.
+Gravity Defier: Perform impossible feats with gravitational anomalies.
+Ethereal Explorer: Visit every dimension or realm in the game.
+Legacy of Legends: Leave behind a significant mark in the game world.
+Boundary Breaker: Reach areas the developers never intended.
+The Final Stand: Overcome the last wave of enemies with style.
+Master of Fate: Shape the ending based on your choices.
+Endless Potential: Maximize every character build possibility.
+Timeless Guardian: Protect a legendary relic for all eternity.
+Silent Protector: Save a village without being seen.
+Gladiator King: Dominate every arena in the game.
+Sky Chaser: Pursue and capture an airborne enemy.
+Eternal Light: Keep a beacon lit for an entire campaign.
