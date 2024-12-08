@@ -13,7 +13,7 @@ def get_connection():
     return psycopg2.connect(
         dbname="DB_Final_Project",
         user="postgres",
-        password="bear123321a",
+        password="000000",
         host="localhost",
     )
 
@@ -367,13 +367,14 @@ for user_name in fake_names:
             execute_query(query, values)
 
             # Add record to user_games
-            query = """
-                INSERT INTO public."user_games" 
-                (user_id, game_id, installed_date) 
-                VALUES (%s, %s, NOW())
-                """
-            values = (user_id, game_id)
-            execute_query(query, values)
+            if item_id == 1:
+                query = """
+                    INSERT INTO public."user_games" 
+                    (user_id, game_id, installed_date) 
+                    VALUES (%s, %s, NOW())
+                    """
+                values = (user_id, game_id)
+                execute_query(query, values)
 
             user_fund -= current_price
 
