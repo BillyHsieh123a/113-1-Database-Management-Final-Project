@@ -48,6 +48,7 @@ python .\server.py
 
 ```bash
 python .\client.py 
+```
 
 ## 技術細節
 ## 程式說明
@@ -59,12 +60,14 @@ python .\client.py
     - 包含客戶端主要功能
     - 透過 Flask 和伺服器進行聯繫
     - 將使用者輸入的資料傳給伺服器並些收回應
+
 ## 開發環境
-• Windows 11
-• Python 3.11.9
-    Flask 3.1.0
-    psycopg2 2.9.10
-• PostgreSQL 16.4
+- Windows 11
+- Python 3.11.9
+  - Flask 3.1.0
+  - psycopg2 2.9.10
+- PostgreSQL 16.4
+
 ## 參考資料
-• Steam
-• https://devs.tw/post/448
+- Steam
+- [Flask 簡介](https://devs.tw/post/448)
