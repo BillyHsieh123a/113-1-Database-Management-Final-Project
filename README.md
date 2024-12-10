@@ -36,8 +36,8 @@
 - 開發商可以查詢自己擁有哪些遊戲。
 ## 使用方法
 - 使用資料夾 `generate_data`裡的 備份檔 `database_with_fake_data` 自行加上 `.backup` 以後復原資料庫
-- 預設連線通道為 **http://127.0.0.1:5000**，可至資料夾 `Front&Back` 裡的 `client.py` 修改
-- 資料夾 Front&Back` 裡的 `server.py` 的函式 
+- 預設連線通道為 ** http://127.0.0.1:5000 **，可至資料夾 `Front&Back` 裡的 `client.py` 修改
+- 資料夾 `Front&Back` 裡的 `server.py` 的函式 
 get_connection()` 設定**資料庫名稱** (dbname)、**使用者名稱** (user)、**資料庫密碼** (password)及**主機位置** (host)
 
 先執行 `server.py` 啟動伺服器：
