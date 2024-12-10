@@ -58,7 +58,7 @@ def signup():
 
     try:
         execute_query(query, values)
-        return jsonify({"message": "User successfully registered!"}), 201
+        return jsonify({"message": "User successfully registered!"}), 200
     except Exception as e:
 
         return jsonify({"error": str(e)}), 400
@@ -392,18 +392,19 @@ def user_buy_items(user_id, game_id, item_id):
         conn = get_connection()
         cur = conn.cursor()
 
-        if item_id != '1' and item_id != 1:
-            cur.execute(
-                """
-                SELECT *
-                FROM public."user_games" 
-                WHERE user_id = %s AND game_id = %s AND uninstalled_date = %s
-                """,
-                (user_id, game_id, None)
-            )
-            installed_result = cur.fetchone()
-            if installed_result is None:
-                raise ValueError("Buy game first!!!")
+        # if item_id != '1' and item_id != 1:
+        #     cur.execute(
+        #         """
+        #         SELECT *
+        #         FROM public."user_games" 
+        #         WHERE user_id = %s AND game_id = %s AND uninstalled_date = NULL
+        #         """,
+        #         (user_id, game_id)
+        #     )
+        #     installed_result = cur.fetchone()
+        #     # print(user_id, game_id)
+        #     if installed_result is None:
+        #         raise ValueError("Buy game first!!!")
 
         # Fetch user fund with row locking
         cur.execute(
@@ -462,10 +463,10 @@ def user_buy_items(user_id, game_id, item_id):
             cur.execute(
                 """
                 INSERT INTO public."user_games" 
-                (user_id, game_id, installed_date) 
-                VALUES (%s, %s, NOW())
+                (user_id, game_id, installed_date, uninstalled_date) 
+                VALUES (%s, %s, NOW(), %s)
                 """,
-                (user_id, game_id)
+                (user_id, game_id, None)
             )
 
         conn.commit()

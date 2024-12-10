@@ -20,7 +20,7 @@ def signup():
     }
 
     response = requests.post(f"{SERVER_URL}/signup", json=user_data)
-    if response.status_code == 201:
+    if response.status_code == 200:
         print(response.json()["message"])
     else:
         print(f"Error: {response.json().get('error')}")
@@ -349,8 +349,8 @@ def main():
                 choice = input("Select an option: ")
 
                 if choice == "1":
-                    user_name = input("Enter User Name to view profile: ")
-                    show_user_profile(user_name)
+                    profile_user_name = input("Enter User Name to view profile: ")
+                    show_user_profile(profile_user_name)
                 elif choice == "2":
                     keywords = input("Enter Keywords to Search for Games: ")
                     search_games(keywords)
