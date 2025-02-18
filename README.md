@@ -4,7 +4,9 @@
 此外，系統還追蹤遊戲成就和用戶遊戲統計資料，並提供發行商資訊，讓用戶深入了解遊戲背景。透過清晰的資料結構與關係設計，我們的平台不僅提升了資料管理效率，還為未來功能擴展提供了靈活性。  
 
 ## 展示影片
-[![YouTube Video](https://img.youtube.com/vi/YN_xW8Uwzgc/maxresdefault.jpg)](https://www.youtube.com/watch?v=YN_xW8Uwzgc)
+<a href="https://www.youtube.com/watch?v=YN_xW8Uwzgc" target="_blank">
+  <img src="https://img.youtube.com/vi/YN_xW8Uwzgc/maxresdefault.jpg" alt="YouTube Video">
+</a>
 
 ## 使用者功能
 ### User（一般使用者）
